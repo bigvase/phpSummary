@@ -19,7 +19,11 @@
         "php": ">=5.4.0",
         "topthink/framework": "^5.0",
         "pclzip/pclzip": "^2.8",
-        "illuminate/queue": "^5.2"
+        "illuminate/queue": "^5.2",
+        "phpmailer/phpmailer": "^6.0",
+        "phpoffice/phpexcel": "^1.8",
+        "picqer/php-barcode-generator": "^0.2.2",
+        "endroid/qrcode": "^1.9"
     },
     "extra": {
         "think-path": "thinkphp"
@@ -28,4 +32,3 @@
         "preferred-install": "dist"
     }
 }
-

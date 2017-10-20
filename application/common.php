@@ -10,3 +10,18 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+function test2(){
+    echo "all-common-function";
+}
+
+/**
+ * 查看当前文件导入的文件
+ */
+function export_class_look(){
+    $included_files = get_included_files();
+    foreach ($included_files as $filename) {
+        echo "$filename";
+        echo "<br>";
+    }
+    die();
+}
