@@ -1431,7 +1431,6 @@ class QrCode
         imagecolorallocate($output_image, 255, 255, 255);
 
         $image_path = $image_path.'/qrv'.$qrcode_version.'.png';
-
         $base_image = imagecreatefrompng($image_path);
         $code_size = $this->size;
         $module_size = function ($size = 1) use ($code_size, $base_image) {
