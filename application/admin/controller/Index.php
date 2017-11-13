@@ -33,6 +33,7 @@ class Index extends CommonController
 
     public function index()
     {
+        echo date("Y-m-d H:i:s",'1493358326');die;
         $msg = array(
             'name'=>'name1',
         );
