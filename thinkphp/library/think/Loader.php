@@ -242,6 +242,7 @@ class Loader
         // 注册系统自动加载
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
         // 注册命名空间定义
+//        echo LIB_PATH;die;
         self::addNamespace([
             'think'    => LIB_PATH . 'think' . DS,
             'behavior' => LIB_PATH . 'behavior' . DS,
@@ -251,7 +252,6 @@ class Loader
         if (is_file(RUNTIME_PATH . 'classmap' . EXT)) {
             self::addClassMap(__include_file(RUNTIME_PATH . 'classmap' . EXT));
         }
-
         // Composer自动加载支持
         if (is_dir(VENDOR_PATH . 'composer')) {
             self::registerComposerLoader();
@@ -259,6 +259,7 @@ class Loader
 
         // 自动加载extend目录
         self::$fallbackDirsPsr4[] = rtrim(EXTEND_PATH, DS);
+
     }
 
     // 注册composer自动加载
@@ -270,30 +271,32 @@ class Loader
                 self::addPsr0($namespace, $path);
             }
         }
-
         if (is_file(VENDOR_PATH . 'composer/autoload_psr4.php')) {
             $map = require VENDOR_PATH . 'composer/autoload_psr4.php';
             foreach ($map as $namespace => $path) {
                 self::addPsr4($namespace, $path);
             }
         }
-
         if (is_file(VENDOR_PATH . 'composer/autoload_classmap.php')) {
             $classMap = require VENDOR_PATH . 'composer/autoload_classmap.php';
             if ($classMap) {
                 self::addClassMap($classMap);
             }
         }
-
         if (is_file(VENDOR_PATH . 'composer/autoload_files.php')) {
+
             $includeFiles = require VENDOR_PATH . 'composer/autoload_files.php';
             foreach ($includeFiles as $fileIdentifier => $file) {
+
                 if (empty(self::$autoloadFiles[$fileIdentifier])) {
-                    __require_file($file);
+                    echo $file;
+                    echo "\n";
+//                    __require_file($file);
                     self::$autoloadFiles[$fileIdentifier] = true;
                 }
             }
         }
+        echo 5;die;
     }
 
     /**

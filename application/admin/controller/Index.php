@@ -27,19 +27,27 @@ class Index extends CommonController
     }
 
     public function test1(){
-        $data = get_date('2017-10-02','w');
+        $str = '-14,13213';
+        $data = explode(',',$str);
         dump($data);
     }
 
     public function index()
     {
-        echo date("Y-m-d H:i:s",'1493358326');die;
-        $msg = array(
-            'name'=>'name1',
-        );
-        $data = Db::name('list')
-            ->select();
-        return $this->fetch('index',$data);
+        $demo = \think\Loader::model('admin/SignService','service');
+//        $key = $demo->create_key();
+//        dump($key);die;
+        $str = '加密解密';
+        $str = $demo->public_encrypt($str); //用公密钥加密
+        echo $str.'</br>';
+        $str = $demo->private_decrypt($str); //用私密钥解密
+        echo $str.'</br>';
+            //=============================================================
+        $str = $demo->private_encrypt($str); //用丝密钥加密
+        echo $str.'</br>';
+        $str = $demo->public_decrypt($str); //用公密钥解密
+        echo $str.'</br>';
+        die;
     }
 
     public function lists(){

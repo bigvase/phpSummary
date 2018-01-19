@@ -275,3 +275,24 @@ function http_request($url){
     return $output;
 }
 
+/**
+ * 按行读取
+ * @param $filename
+ * @param $rowStart
+ * @param $num
+ */
+function get_row_txt($filename,$rowStart,$num,$type=','){
+    $row     = 0; //行数
+    $pointer = 0; //指针
+    $dt      = []; //容器
+    $f = fopen($filename,'r');
+    while (!feof($f) && $row<=$num)
+    {
+        $pointer ++;
+        $line = fgets($f,2048);//fgets指针自动下移
+        if($pointer > $rowStart){
+            $dt[] = explode($type, $line);
+        }
+    }
+}
+
