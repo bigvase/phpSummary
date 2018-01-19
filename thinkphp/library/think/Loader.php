@@ -242,7 +242,6 @@ class Loader
         // 注册系统自动加载
         spl_autoload_register($autoload ?: 'think\\Loader::autoload', true, true);
         // 注册命名空间定义
-//        echo LIB_PATH;die;
         self::addNamespace([
             'think'    => LIB_PATH . 'think' . DS,
             'behavior' => LIB_PATH . 'behavior' . DS,
@@ -289,14 +288,11 @@ class Loader
             foreach ($includeFiles as $fileIdentifier => $file) {
 
                 if (empty(self::$autoloadFiles[$fileIdentifier])) {
-                    echo $file;
-                    echo "\n";
-//                    __require_file($file);
+                    __require_file($file);
                     self::$autoloadFiles[$fileIdentifier] = true;
                 }
             }
         }
-        echo 5;die;
     }
 
     /**

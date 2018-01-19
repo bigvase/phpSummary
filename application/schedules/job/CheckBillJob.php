@@ -21,13 +21,8 @@ class CheckBillJob extends Job {//文件名，都是规定以Job结尾的
         //........
         $para1 = $_SERVER['argv'][2];
         try {
-            $service = service('Admin/CheckBill');
-            //业务逻辑
-            if($para1){
-                $service->checkRun($para1);
-            }else{
-                $service->checkRun();
-            }
+            echo $para1;
+            echo "success";
         } catch (Exception $e) {
             echo iconv('utf-8', 'gbk', $e->getMessage());
             //如需要：错信息写入文件，发邮件，发短信.....

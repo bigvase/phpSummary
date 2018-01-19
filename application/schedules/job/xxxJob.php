@@ -20,7 +20,7 @@ class xxxJob extends Job {//文件名，都是规定以Job结尾的
         $para2 = $_SERVER['argv'][3];
         //........
         try {
-            $service = service('Admin/EscrowHttp');
+           echo "a";die;
             //业务逻辑
             
             

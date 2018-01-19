@@ -17,7 +17,7 @@ abstract class Job {
 	function __construct($argV = '') {
 		$class = get_class($this);
 		$this->file = APP_PATH."/schedules/logs/" . $class . "_" . date('Y-m-d') . ".log";
-		$lockFilePrefix = array_filter(array($class, $argV ? md5(serialize($argV)) : '', CACHE_PREFIX, "job"));
+		$lockFilePrefix = array_filter(array($class, $argV ? md5(serialize($argV)) : '', '123', "job"));
 		$this->lockFileName = APP_PATH."/schedules/tmp/" . implode('_', $lockFilePrefix). ".locker";
 		$this->lockfd = fopen($this->lockFileName, 'w+');
 		$this->argV = $argV;

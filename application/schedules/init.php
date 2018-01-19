@@ -55,17 +55,16 @@ if (is_file(ROOT_PATH . '.env')) {
         }
     }
 }
-
 // 注册自动加载
 //\think\Loader::register();
+
 // 注册错误和异常处理机制
 \think\Error::register();
-
 // 加载惯例配置文件
 \think\Config::set(include THINK_PATH . 'convention' . EXT);
-require
+
 // 执行应用
-App::initCommon();
-Console::init();
+\think\App::initCommon();
+\think\Console::init();
 
 //[/RUNTIME]

@@ -5,7 +5,7 @@ require_once(dirname(dirname(__FILE__)). '/schedules/init.php');
 function job_autoload($class) {
 	$class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
 	if (substr($class, -3) === 'Job') {
-		require_once (SITE_PATH."/app/schedules/job/{$class}.php");
+		require_once (SITE_PATH."/application/schedules/job/{$class}.php");
 	}
 }
 spl_autoload_register('job_autoload');
