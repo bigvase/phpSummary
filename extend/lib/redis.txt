@@ -1,0 +1,78 @@
+﻿  
+一、 按数据类型封装好的redis 调用方法：
+
+0、Redis 的调用方法()
+        import_addon("libs.Cache.redis");
+        $redis1 = new redis();
+        $redis = $redis1->getInstance('activity');
+        $data = $redis->get($key);
+
+1、 RedisHash 的调用方法
+        import_addon("libs.Cache.RedisHash");
+        $hash = new RedisHash(self::UPG_ONLINE_USERS);
+        //从Hash中取出指定Key的值
+        $keyvalue = $hash->get($uid);
+
+2、 RedisList 的调用方法
+        import_addon("libs.Cache.RedisList");
+        $redisObj = RedisList::getInstance($redisKey);
+        $result = $redisObj->lGet(0);
+
+3、RedisSortSet 的调用方法
+        import_addon("libs.Cache.RedisSortSet");
+        $user =  RedisSortSet::getInstance( self::USER_KEY, self::RANK_EXPIRE );
+    或者：
+        $redissort = new RedisSortSet(AppStatsModel::RANKINGNAME);
+        $redissort->select(AppStatsModel::RANKINGREDISDB);
+        $rankingdata=$redissort->zRevRange(0,$count-1,true);
+
+4、RedisSimply 的调用方法
+        import_addon("libs.Cache.RedisSimply");
+        $redis = new RedisSimply($redisKey,$expiretime);
+        $result = $redis->get($key)
+    
+5、SimpleCounter 的调用方法
+        import_addon("libs.Counter.SimpleCounter");
+        $key_counter = SimpleCounter::init($prefix, $lifeTime);//其中$prefix, $lifeTime 在 在Counter 中定义，如：Counter::GROUP_NEWREGHONGBAO_COUNTER, Counter::LIFETIME_THISI
+        $kcount = $key_counter->incr($key);//计数器+1
+        
+        if ($kcount > 1) {
+          
+        }else{
+
+        }
+
+6、SimpleCounter 的调用方法
+        import_addon("libs.Counter.MultiCounter");
+        $counterObj = MultiCounter::init($prefix, $lifeTime);//其中$prefix, $lifeTime 在 在Counter 中定义，如：Counter::GROUP_NEWREGHONGBAO_COUNTER, Counter::LIFETIME_THISI
+        $number = $counterObj->incr($key);
+
+
+
+
+二、全局的 通用的 redis 缓存实例，不要单独引入，在代码中直接使用s，使用方法如下：
+
+   RedisCache::G()->Set($key,'122222')
+
+   $val = RedisCache::G()->Get($key);
+
+   RedisCache::G()->Inc($keycount)
+
+   RedisCache::G()->Dec($keycount)
+
+   $lockcount = RedisCache::G()->inclock($keylock) //加锁
+
+
+   其他用法，查看此类的其他方法(需要时，后期可以对此类封装其他redis方法)
+
+
+三、后期增加redis封装类或者已经存在的其他的redis封装的类，都统一放到或迁移放到 app/addons/Cache/ 目录
+
+
+
+
+
+
+
+
+
