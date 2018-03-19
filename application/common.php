@@ -23,8 +23,8 @@ function export_class_look(){
 }
 
 
-function array_sorts($array,$sort='desc'){
-    echo "aaa";
+function array_sorts($sort='desc'){
+    echo "array_sorts";
 }
 
 /**********************************/
