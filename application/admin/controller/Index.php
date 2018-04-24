@@ -34,6 +34,7 @@ class Index extends CommonController
 
     public function index()
     {
+        echo "a";die;
         $demo = \think\Loader::model('admin/SignService','service');
 //        $key = $demo->create_key();
 //        dump($key);die;
