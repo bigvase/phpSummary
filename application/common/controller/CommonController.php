@@ -12,7 +12,8 @@ use think\Controller;
 class CommonController extends Controller
 {
     public function _initialize(){
-        //todo
+
+
     }
 
 
