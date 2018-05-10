@@ -62,7 +62,6 @@ class Console
 
     public static function init($run = true)
     {
-        return true;
         static $console;
         if (!$console) {
             // 实例化console

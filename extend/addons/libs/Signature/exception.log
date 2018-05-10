@@ -1,0 +1,75 @@
+2017-12-19 17:31:12 - exception 'Exception' with message '本地java服务初始化失败 - Could not resolve host: javaserver.xiaojilicai.com' in D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\JavaComm.php:89
+Stack trace:
+#0 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(94): Signature\core\JavaComm->init(Array)
+#1 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(70): Signature\core\eSign->init()
+#2 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\Sign.php(41): Signature\core\eSign->__construct()
+#3 D:\phpStudy\WWW\fzcs.xiaojilicai.com\app\Modules\Home\Action\TestAction.class.php(5327): Addons\Libs\Signature\Sign::getInstance()
+#4 [internal function]: TestAction->testSign()
+#5 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(161): ReflectionMethod->invoke(Object(TestAction))
+#6 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(197): App::exec()
+#7 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\Think.class.php(42): App::run()
+#8 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Common\runtime.php(242): Think::start()
+#9 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\ThinkPHP.php(34): require('D:\\phpStudy\\WWW...')
+#10 D:\phpStudy\WWW\fzcs.xiaojilicai.com\index.php(44): require('D:\\phpStudy\\WWW...')
+#11 {main}
+
+2017-12-19 17:32:53 - exception 'Exception' with message '本地java服务初始化失败 - Could not resolve host: javaserver.xiaojilicai.com' in D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\JavaComm.php:89
+Stack trace:
+#0 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(94): Signature\core\JavaComm->init(Array)
+#1 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(70): Signature\core\eSign->init()
+#2 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\Sign.php(41): Signature\core\eSign->__construct()
+#3 D:\phpStudy\WWW\fzcs.xiaojilicai.com\app\Modules\Home\Action\TestAction.class.php(5327): Addons\Libs\Signature\Sign::getInstance()
+#4 [internal function]: TestAction->testSign()
+#5 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(161): ReflectionMethod->invoke(Object(TestAction))
+#6 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(197): App::exec()
+#7 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\Think.class.php(42): App::run()
+#8 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Common\runtime.php(242): Think::start()
+#9 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\ThinkPHP.php(34): require('D:\\phpStudy\\WWW...')
+#10 D:\phpStudy\WWW\fzcs.xiaojilicai.com\index.php(44): require('D:\\phpStudy\\WWW...')
+#11 {main}
+
+2017-12-19 17:35:18 - exception 'Exception' with message '本地java服务初始化失败 - Could not resolve host: javaserver.xiaojilicai.com' in D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\JavaComm.php:89
+Stack trace:
+#0 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(94): Signature\core\JavaComm->init(Array)
+#1 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(70): Signature\core\eSign->init()
+#2 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\Sign.php(41): Signature\core\eSign->__construct()
+#3 D:\phpStudy\WWW\fzcs.xiaojilicai.com\app\Modules\Home\Action\TestAction.class.php(5327): Addons\Libs\Signature\Sign::getInstance()
+#4 [internal function]: TestAction->testSign()
+#5 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(161): ReflectionMethod->invoke(Object(TestAction))
+#6 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(197): App::exec()
+#7 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\Think.class.php(42): App::run()
+#8 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Common\runtime.php(242): Think::start()
+#9 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\ThinkPHP.php(34): require('D:\\phpStudy\\WWW...')
+#10 D:\phpStudy\WWW\fzcs.xiaojilicai.com\index.php(44): require('D:\\phpStudy\\WWW...')
+#11 {main}
+
+2017-12-19 17:39:44 - exception 'Exception' with message '本地java服务初始化失败 - Could not resolve host: javaserver.xiaojilicai.com' in D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\JavaComm.php:89
+Stack trace:
+#0 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(94): Signature\core\JavaComm->init(Array)
+#1 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(70): Signature\core\eSign->init()
+#2 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\Sign.php(48): Signature\core\eSign->__construct()
+#3 D:\phpStudy\WWW\fzcs.xiaojilicai.com\app\Modules\Home\Action\TestAction.class.php(5328): Addons\Libs\Signature\Sign->aaa()
+#4 [internal function]: TestAction->testSign()
+#5 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(161): ReflectionMethod->invoke(Object(TestAction))
+#6 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(197): App::exec()
+#7 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\Think.class.php(42): App::run()
+#8 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Common\runtime.php(242): Think::start()
+#9 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\ThinkPHP.php(34): require('D:\\phpStudy\\WWW...')
+#10 D:\phpStudy\WWW\fzcs.xiaojilicai.com\index.php(44): require('D:\\phpStudy\\WWW...')
+#11 {main}
+
+2017-12-19 17:43:55 - exception 'Exception' with message '本地java服务初始化失败 - Could not resolve host: javaserver.xiaojilicai.com' in D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\JavaComm.php:89
+Stack trace:
+#0 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(94): Signature\core\JavaComm->init(Array)
+#1 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\core\eSign.php(70): Signature\core\eSign->init()
+#2 D:\phpStudy\WWW\fzcs.xiaojilicai.com\addons\libs\Signature\Sign.php(42): Signature\core\eSign->__construct()
+#3 D:\phpStudy\WWW\fzcs.xiaojilicai.com\app\Modules\Home\Action\TestAction.class.php(5327): Addons\Libs\Signature\Sign::getInstance()
+#4 [internal function]: TestAction->testSign()
+#5 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(161): ReflectionMethod->invoke(Object(TestAction))
+#6 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\App.class.php(197): App::exec()
+#7 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Lib\Core\Think.class.php(42): App::run()
+#8 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\Common\runtime.php(242): Think::start()
+#9 D:\phpStudy\WWW\fzcs.xiaojilicai.com\core\ThinkPHP\ThinkPHP.php(34): require('D:\\phpStudy\\WWW...')
+#10 D:\phpStudy\WWW\fzcs.xiaojilicai.com\index.php(44): require('D:\\phpStudy\\WWW...')
+#11 {main}
+
