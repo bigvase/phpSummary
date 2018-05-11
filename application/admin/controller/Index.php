@@ -34,6 +34,9 @@ class Index extends CommonController
 
     public function index()
     {
+        $blog = model('blog');
+        $ret = $blog->blogAdd();
+        dump($ret);die;
         echo "a";die;
         $demo = \think\Loader::model('admin/SignService','service');
 //        $key = $demo->create_key();
@@ -49,6 +52,12 @@ class Index extends CommonController
         $str = $demo->public_decrypt($str); //用公密钥解密
         echo $str.'</br>';
         die;
+    }
+    public function login(){
+        if($_POST){
+            dump($_POST);
+        }
+        return $this->fetch();
     }
 
     public function lists(){
