@@ -20,11 +20,11 @@ class CheckBillJob extends Job {//文件名，都是规定以Job结尾的
         //获取参数
         //........
 //        dump($_SERVER['argv']);die;
-//        $para1 = $_SERVER['argv'][2];
+        $para1 = $_SERVER['argv'][2];
         try {
-//            if($para1){
-//                echo $para1;
-//            }
+            if($para1){
+                echo $para1."\n";
+            }
             echo "success";
         } catch (Exception $e) {
             echo iconv('utf-8', 'gbk', $e->getMessage());

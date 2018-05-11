@@ -59,11 +59,11 @@ class Redis
     private static function getRedisConfigByName($server_name = 'default')
     {
         if (!extension_loaded('redis')) {
-            throw_exception(L('_NOT_SUPPERT_') . ':redis');
+            throw new \think\Exception('_NOT_SUPPERT_:' . ':redis');
         }
-        $redis_config = C('REDIS');
+        $redis_config = config('REDIS');
         if (!isset($redis_config['default'])) {
-            throw_exception('请在配置文件中增加redis默认配置');
+            throw new \think\Exception('请在配置文件中增加redis默认配置');
         }
         if (!isset($redis_config[$server_name])) {
             return $redis_config['default'];
@@ -103,7 +103,7 @@ class Redis
                 $redis_config['timeout']
             );
             if ($redis_config['password'] && !$redis->auth($redis_config['password'])) {
-                throw_exception("redis 认证密码错误");
+                throw new \think\Exception("redis 认证密码错误");
             }
             if ($redis_config['database']) {
                 $redis->select($redis_config['database']);

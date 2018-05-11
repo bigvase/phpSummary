@@ -7,7 +7,6 @@
  */
 namespace app\admin\controller;
 
-use Picqer\Barcode\BarcodeGeneratorPNG;
 use think\Db;
 use app\common\controller\CommonController;
 use app\admin\model\NameList;
@@ -17,6 +16,7 @@ use PHPMailer\PHPMailer\Exception;
 
 use Endroid\QrCode\QrCode;
 
+use picqer\barcode\src\BarcodeGeneratorPNG;
 
 
 class Index extends CommonController
@@ -34,9 +34,6 @@ class Index extends CommonController
 
     public function index()
     {
-        $blog = model('blog');
-        $ret = $blog->blogAdd();
-        dump($ret);die;
         echo "a";die;
         $demo = \think\Loader::model('admin/SignService','service');
 //        $key = $demo->create_key();
@@ -52,12 +49,6 @@ class Index extends CommonController
         $str = $demo->public_decrypt($str); //用公密钥解密
         echo $str.'</br>';
         die;
-    }
-    public function login(){
-        if($_POST){
-            dump($_POST);
-        }
-        return $this->fetch();
     }
 
     public function lists(){
@@ -179,10 +170,9 @@ class Index extends CommonController
 
         $qrCode = new QrCode();
 //        echo ;die;
-//        dump($qrCode) ;die;
         $qrCode
             ->setText('ddLife is too short to be generating QR codes11')
-            ->setImagePath(dirname(dirname(dirname(dirname(__FILE__)))).'/data')
+            ->setImagePath(__DIR__)
             ->setSize(300)
             ->setPadding(10)
             ->setErrorCorrection('high')
@@ -195,7 +185,7 @@ class Index extends CommonController
 
 // now we can directly output the qrcode
         header('Content-Type: '.$qrCode->getContentType());
-//        $qrCode->render();
+        $qrCode->render();
 
 // save it to a file
 //        $qrCode->save('qrcode.png');
@@ -212,7 +202,7 @@ class Index extends CommonController
     public function barcode(){
         vendor('picqer.barcode.src.BarcodeGeneratorPNG');
 //        export_class_look();
-        $generator = new BarcodeGeneratorPNG();
+        $generator = BarcodeGeneratorPNG();
         echo $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
 
 
