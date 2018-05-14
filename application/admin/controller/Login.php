@@ -33,7 +33,16 @@ class Login extends CommonController
      * 登录验证
      */
     public function doLogin(){
-        dump($_POST);die;
+        $username = input('username');
+        $password = input('password');
+        if(empty($username) || empty($password)) $this->error('用户名或者密码不能为空',Url('/admin/login/login'));
+
+        $user = db('user')->where(['username'=>$username])->find();
+        if(!$user) $this->error('该用户不存在！',Url('/admin/login/login'));
+        if($user['password'] != md5($password)) $this->error('密码错误',Url('/admin/login/login'));
+        session('username',$username);
+        $this->success('登录成功',Url('/admin/index/index'));
+
     }
 
 }

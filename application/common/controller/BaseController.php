@@ -3,17 +3,11 @@
  * Class BaseController
  */
 
-namespace appli\\common;
+namespace app\common\controller;
 
+use think\Controller;
+use think\Request;
 
-use app\models\Access;
-use app\models\AppAccessLog;
-use app\models\RoleAccess;
-use app\models\User;
-use app\models\UserRole;
-use app\services\UrlService;
-use yii\web\Controller;
-use Yii;
 //是以后所有控制器的基类，并且集成常用公用方法
 class BaseController extends  Controller{
 
@@ -36,16 +30,16 @@ class BaseController extends  Controller{
 	public function beforeAction($action) {
 		$login_status = $this->checkLoginStatus();
 		if ( !$login_status && !in_array( $action->uniqueId,$this->allowAllAction )  ) {
-			if(Yii::$app->request->isAjax){
+			if(input()){
 				$this->renderJSON([],"未登录,请返回用户中心",-302);
 			}else{
-				$this->redirect( UrlService::buildUrl("/user/login") );//返回到登录页面
+				$this->redirect("/user/login");//返回到登录页面
 			}
 			return false;
 		}
 		//保存所有的访问到数据库当中
-		$get_params = $this->get( null );
-		$post_params = $this->post( null );
+		$get_params = Request::instance()->get(null);
+		$post_params = Request::instance()->post( null );
 		$model_log = new AppAccessLog();
 		$model_log->uid = $this->current_user?$this->current_user['id']:0;
 		$model_log->target_url = isset( $_SERVER['REQUEST_URI'] )?$_SERVER['REQUEST_URI']:'';
@@ -184,6 +178,6 @@ class BaseController extends  Controller{
 			"data"  =>  $data,
 			"req_id" =>  uniqid(),
 		]);
-		return Yii::$app->end();//终止请求直接返回
+//		return Yii::$app->end();//终止请求直接返回
 	}
 }

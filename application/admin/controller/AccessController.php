@@ -2,15 +2,15 @@
 
 namespace app\controllers;
 
-use app\controllers\common\BaseController;
-use app\models\Access;
+use app\common\controller\BaseController;
+use think\Db;
 
 class AccessController extends BaseController {
 
 	//权限列表
     public function actionIndex(){
-		$access_list = Access::find()->where([ 'status' => 1 ])->orderBy([ 'id' => SORT_DESC ])->all();
-		return $this->render('index',[
+		$access_list = Db::table('Access')->where([ 'status' => 1 ])->order('')->select();
+		return $this->fetch('index',[
 			'list' => $access_list
 		]);
     }
@@ -28,7 +28,7 @@ class AccessController extends BaseController {
 			if( $id ){
 				$info = Access::find()->where([ 'status' => 1 ,'id' => $id ])->one();
 			}
-			return $this->render('set',[
+			return $this->fetch('set',[
 				'info' => $info
 			]);
 		}

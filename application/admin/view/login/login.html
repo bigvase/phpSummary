@@ -1,31 +1,6 @@
-<!DOCTYPE html>
-<!--[if IE 8]>
-<html lang="en" class="ie8"> <![endif]-->
-<!--[if IE 9]>
-<html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="en"> <!--<![endif]-->
-<!-- BEGIN HEAD -->
-<head>
-    <meta charset="utf-8"/>
-    <title>Metronic | Login Options - Login Form 2</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="__PUBLIC__/static/admin/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/style-metro.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-    <link href="__PUBLIC__/static/admin/css/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-    <link href="__PUBLIC__/static/admin/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-    <!-- END GLOBAL MANDATORY STYLES -->
+{include file="public/_header"}
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link href="__PUBLIC__/static/admin/css/login-soft.css" rel="stylesheet" type="text/css"/>
-    <!-- END PAGE LEVEL STYLES -->
-    <link rel="shortcut icon" href="__PUBLIC__/static/admin/image/favicon.ico"/>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -71,20 +46,22 @@
                 Login <i class="m-icon-swapright m-icon-white"></i>
             </button>
         </div>
-        <div class="forget-password">
-            <h4>Forgot your password ?</h4>
-            <p>
-                no worries, click <a href="javascript:;" class="" id="forget-password">here</a>
-                to reset your password.
-            </p>
-        </div>
-        <div class="create-account">
-            <p>
-                Don't have an account yet ?&nbsp;
-                <a href="javascript:;" id="register-btn" class="">Create an account</a>
-            </p>
-        </div>
+        <!--<div class="forget-password">-->
+            <!--<h4>Forgot your password ?</h4>-->
+            <!--<p>-->
+                <!--no worries, click <a href="javascript:;" class="" id="forget-password">here</a>-->
+                <!--to reset your password.-->
+            <!--</p>-->
+        <!--</div>-->
+        <!--<div class="create-account">-->
+            <!--<p>-->
+                <!--Don't have an account yet ?&nbsp;-->
+                <!--<a href="javascript:;" id="register-btn" class="">Create an account</a>-->
+            <!--</p>-->
+        <!--</div>-->
     </form>
+
+
     <!-- END LOGIN FORM -->
 </div>
 <!-- END LOGIN -->
@@ -120,7 +97,7 @@
 <script>
     jQuery(document).ready(function () {
         App.init();
-        Login.init();
+//        Login.init();
     });
 </script>
 <!--END JAVASCRIPTS -->
@@ -133,4 +110,4 @@
 </script>
 </body>
 <!-- END BODY -->
-</html>
+{include file="public/_footer"}

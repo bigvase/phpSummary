@@ -6,21 +6,17 @@
 namespace app\controllers;
 
 
-use app\controllers\common\BaseController;
-use app\models\Role;
-use app\models\User;
-use app\models\UserRole;
-use app\services\UrlService;
+use app\common\controller\BaseController;
 
-class UserController extends  BaseController{
+class User extends  BaseController{
 
 	//用户列表
-	public function actionIndex(){
+	public function index(){
 		//查询所有用户
 		$user_list = User::find()->where([ 'status' => 1 ])->orderBy([ 'id' => SORT_DESC ])->all();
 		//判断当前用户时候有访问添加或编辑用户的权限
 		$set_flag = $this->checkPrivilege( "user/set" );
-		return $this->render('index',[
+		return $this->fetch('index',[
 			'list' => $user_list,
 			'set_flag' => $set_flag
 		]);
@@ -44,7 +40,7 @@ class UserController extends  BaseController{
 			//取出所有的已分配角色
 			$user_role_list = UserRole::find()->where([ 'uid' => $id ])->asArray()->all();
 			$related_role_ids = array_column($user_role_list,"role_id");
-			return $this->render('set',[
+			return $this->fetch('set',[
 				'info' => $info,
 				'role_list' => $role_list,
 				"related_role_ids" => $related_role_ids
@@ -125,7 +121,7 @@ class UserController extends  BaseController{
 
 	//用户登录页面
 	public function actionLogin(){
-		return $this->render("login",[
+		return $this->fetch("login",[
 			'host' => $_SERVER['HTTP_HOST']
 		]);
 	}
