@@ -2,15 +2,11 @@
 
 namespace app\controllers;
 
-use app\controllers\common\BaseController;
-use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
+use app\common\controller\BaseController;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends BaseController
+class Site extends BaseController
 {
     /**
      * @inheritdoc
@@ -61,7 +57,7 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->fetch('index');
     }
 
     /**

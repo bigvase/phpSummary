@@ -3,13 +3,15 @@
 namespace app\controllers;
 
 use app\common\controller\BaseController;
+use app\models\Access;
 use think\Db;
+use think\Request;
 
-class AccessController extends BaseController {
+class Accessed extends BaseController {
 
 	//权限列表
-    public function actionIndex(){
-		$access_list = Db::table('Access')->where([ 'status' => 1 ])->order('')->select();
+    public function Index(){
+		$access_list = db('Access')->where([ 'status' => 1 ])->order('id desc')->select();
 		return $this->fetch('index',[
 			'list' => $access_list
 		]);
@@ -20,22 +22,22 @@ class AccessController extends BaseController {
 	 * get 展示页面
 	 * post 处理添加或者编辑权限
 	 */
-    public function actionSet(){
+    public function Set(){
 		//如果是get请求则演示页面
-		if( \Yii::$app->request->isGet ){
+		if( Request::instance()->get() ){
 			$id = $this->get("id",0);
 			$info = [];
 			if( $id ){
-				$info = Access::find()->where([ 'status' => 1 ,'id' => $id ])->one();
+				$info = db('Access')->where([ 'status' => 1 ,'id' => $id ])->find();
 			}
 			return $this->fetch('set',[
 				'info' => $info
 			]);
 		}
 
-		$id = intval( $this->post("id",0) );
-		$title = trim( $this->post("title","") );
-		$urls = trim( $this->post("urls","") );
+		$id = intval( input("id",0) );
+		$title = trim( input("title","") );
+		$urls = trim( input("urls","") );
 		$date_now = date("Y-m-d H:i:s");
 		if( mb_strlen($title,"utf-8") < 1 || mb_strlen($title,"utf-8") > 20 ){
 			return $this->renderJSON([],'请输入合法的权限标题~~',-1);
@@ -51,13 +53,13 @@ class AccessController extends BaseController {
 		}
 
 		//查询同一标题的是否存在
-		$has_in = Access::find()->where([ 'title' => $title ])->andWhere([ '!=','id',$id ])->count();
+		$has_in = db('Access')->where([ 'title' => $title ])->where('id','neq',$id )->count();
 		if( $has_in ){
 			return $this->renderJSON([],'该权限标题已存在~~',-1);
 		}
 
 		//查询指定id的权限
-		$info = Access::find()->where([ 'id' => $id ])->one();
+		$info = Db::table('Access')->where([ 'id' => $id ])->select();
 		if( $info ){//如果存在则是编辑
 			$model_access = $info;
 		}else{//不存在就是添加

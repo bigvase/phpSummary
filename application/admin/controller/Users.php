@@ -7,13 +7,19 @@ namespace app\controllers;
 
 
 use app\common\controller\BaseController;
+use app\models\Role;
+use app\models\User;
+use app\models\UserRole;
+use app\services\UrlService;
+use think\Db;
+use think\Request;
 
-class User extends  BaseController{
+class Users extends  BaseController{
 
 	//用户列表
-	public function index(){
+	public function Index(){
 		//查询所有用户
-		$user_list = User::find()->where([ 'status' => 1 ])->orderBy([ 'id' => SORT_DESC ])->all();
+		$user_list = Db::table('User')->where([ 'status' => 1 ])->order([ 'id' => SORT_DESC ])->select();
 		//判断当前用户时候有访问添加或编辑用户的权限
 		$set_flag = $this->checkPrivilege( "user/set" );
 		return $this->fetch('index',[
@@ -29,16 +35,16 @@ class User extends  BaseController{
 	 */
 	public function actionSet(){
 		//如果是get请求则演示页面
-		if( \Yii::$app->request->isGet ){
-			$id = $this->get("id",0);
+		if( Request::instance()->get() ){
+			$id = input("id",0);
 			$info = [];
 			if( $id ){
-				$info = User::find()->where([ 'status' => 1 ,'id' => $id ])->one();
+				$info = Db::table('User')->where([ 'status' => 1 ,'id' => $id ])->find();
 			}
 			//取出所有的角色
-			$role_list = Role::find()->orderBy( [ 'id' => SORT_DESC ])->all();
+			$role_list = Db::table('Role')->order('id desc')->select();
 			//取出所有的已分配角色
-			$user_role_list = UserRole::find()->where([ 'uid' => $id ])->asArray()->all();
+			$user_role_list = Db::table('UserRole')->where([ 'uid' => $id ])->select();
 			$related_role_ids = array_column($user_role_list,"role_id");
 			return $this->fetch('set',[
 				'info' => $info,
@@ -47,10 +53,10 @@ class User extends  BaseController{
 			]);
 		}
 
-		$id = intval( $this->post("id",0) );
-		$name = trim( $this->post("name","") );
-		$email = trim( $this->post("email","") );
-		$role_ids = $this->post("role_ids",[]);//选中的角色id
+		$id = intval( input("id",0) );
+		$name = trim( input("name","") );
+		$email = trim( input("email","") );
+		$role_ids = input("role_ids",[]);//选中的角色id
 		$date_now = date("Y-m-d H:i:s");
 
 		if( mb_strlen($name,"utf-8") < 1 || mb_strlen($name,"utf-8") > 20 ){
@@ -62,12 +68,12 @@ class User extends  BaseController{
 		}
 
 		//查询该邮箱是否已经存在
-		$has_in = User::find()->where([ 'email' => $email ])->andWhere([ '!=','id',$id ])->count();
+		$has_in = Db::table('User')->where([ 'email' => $email ])->Where('id','neq',$id)->count();
 		if( $has_in ){
 			return $this->renderJSON([],'该邮箱已存在~~',-1);
 		}
 		
-		$info = User::find()->where([ 'id' => $id ])->one();
+		$info = Db::table('User')->where([ 'id' => $id ])->find();
 		if( $info ){//如果存在则是编辑
 			$model_user = $info;
 		}else{//不存在就是添加
@@ -85,7 +91,7 @@ class User extends  BaseController{
 			 * 角色集合A当中的某个角色不在角色集合B当中，就应该删除
 			 * array_diff();计算补集
 			 */
-			$user_role_list = UserRole::find()->where([ 'uid' => $model_user->id ])->all();
+			$user_role_list = Db::table('UserRole')->where([ 'uid' => $model_user->id ])->select();
 			$related_role_ids = [];
 			if( $user_role_list ){
 				foreach( $user_role_list as $_item ){
@@ -129,16 +135,16 @@ class User extends  BaseController{
 	//伪登录业务方法,所以伪登录功能也是需要有auth_token
 	public function actionVlogin(){
 		$uid = $this->get("uid",0);
-		$reback_url = UrlService::buildUrl("/");
+		$reback_url = url("/");
 		if( !$uid ){
-			return $this->redirect( $reback_url );
+			$this->redirect( $reback_url );
 		}
-		$user_info = User::find()->where([ 'id' => $uid ])->one();
+		$user_info = Db::table('User')->where([ 'id' => $uid ])->find();
 		if( !$user_info ){
-			return $this->redirect( $reback_url );
+			$this->redirect( $reback_url );
 		}
 		//cookie保存用户的登录态,所以cookie值需要加密，规则：user_auth_token + "#" + uid
 		$this->createLoginStatus( $user_info );
-		return $this->redirect( $reback_url );
+        $this->redirect( $reback_url );
 	}
 }
