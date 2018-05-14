@@ -1,8 +1,7 @@
 <?php
 
-namespace app\models;
+namespace app\admin\model;
 
-use Yii;
 
 /**
  * This is the model class for table "access".

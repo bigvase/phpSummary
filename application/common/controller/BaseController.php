@@ -12,8 +12,8 @@ use app\models\RoleAccess;
 use app\models\User;
 use app\models\UserRole;
 use app\services\UrlService;
-use yii\web\Controller;
-use Yii;
+use think\Controller;
+
 //是以后所有控制器的基类，并且集成常用公用方法
 class BaseController extends  Controller{
 
