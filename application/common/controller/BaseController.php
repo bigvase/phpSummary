@@ -3,7 +3,7 @@
  * Class BaseController
  */
 
-namespace appli\\common;
+namespace app\common\controller;
 
 
 use app\models\Access;
