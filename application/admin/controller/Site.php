@@ -1,10 +1,8 @@
 <?php
 
-namespace app\controllers;
+namespace app\admin\controller;
 
 use app\common\controller\BaseController;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class Site extends BaseController
 {

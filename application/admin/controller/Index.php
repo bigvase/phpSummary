@@ -34,6 +34,11 @@ class Index extends CommonController
 
     public function index()
     {
+
+        $data =['title'=>'权限名称','urls'=>'asdasdasd','status'=>1,'created_time'=>time()];
+        $ret = $this->validate($data,'Access.add', [], true);
+        dump($ret);
+        die;
         return $this->fetch('index',['a'=>1]);
 //        $blog = model('blog');
 //        $ret = $blog->blogAdd();

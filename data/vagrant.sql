@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-05-11 18:05:28
+Date: 2018-05-18 18:02:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -87,11 +87,17 @@ CREATE TABLE `vt_role` (
   `updated_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后一次更新时间',
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Records of vt_role
 -- ----------------------------
+INSERT INTO `vt_role` VALUES ('1', '王者', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('2', '星耀', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('3', '砖石', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('4', '黄金', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('5', '白银', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('6', '青铜', '1', '0', '0');
 
 -- ----------------------------
 -- Table structure for vt_role_access
@@ -124,12 +130,17 @@ CREATE TABLE `vt_user` (
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`),
   KEY `idx_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of vt_user
 -- ----------------------------
-INSERT INTO `vt_user` VALUES ('1', '超级管理员', 'apanly@163.com', '1', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('1', '超级管理员', 'admin@163.com', '1', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('2', '张三', 'zhangsan@163.com', '0', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('3', '李四', 'lisi@163.com', '0', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('4', '王五', 'wangwu@163.com', '0', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('5', '马六', 'maliu@163.com', '0', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('6', '黄七', 'huangqi@163.com', '0', '1', '0', '0');
 
 -- ----------------------------
 -- Table structure for vt_user_role
@@ -142,8 +153,15 @@ CREATE TABLE `vt_user_role` (
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`),
   KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='用户角色表';
 
 -- ----------------------------
 -- Records of vt_user_role
 -- ----------------------------
+INSERT INTO `vt_user_role` VALUES ('1', '1', '1', '0');
+INSERT INTO `vt_user_role` VALUES ('2', '2', '2', '0');
+INSERT INTO `vt_user_role` VALUES ('3', '3', '3', '0');
+INSERT INTO `vt_user_role` VALUES ('4', '4', '4', '0');
+INSERT INTO `vt_user_role` VALUES ('5', '5', '5', '0');
+INSERT INTO `vt_user_role` VALUES ('6', '6', '6', '0');
+INSERT INTO `vt_user_role` VALUES ('7', '7', '3', '0');

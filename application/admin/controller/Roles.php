@@ -3,21 +3,19 @@
  * Class RoleController
  */
 
-namespace app\admin\controllers;
+namespace app\admin\controller;
 
 
+use app\admin\model\Role;
+use app\admin\model\RoleAccess;
 use app\common\controller\BaseController;
-use app\models\Access;
-use app\models\Role;
-use app\models\RoleAccess;
-use app\services\UrlService;
 use think\Db;
 use think\Request;
 
 class Roles extends  BaseController {
 	//角色列表页面
 	public function Index(){
-		$list = Db::table('Role')->order('id desc')->select();
+		$list = DB::name('Role')->order('id desc')->select();
 
 		return $this->fetch("index",[
 			'list' => $list
@@ -41,7 +39,7 @@ class Roles extends  BaseController {
 			$id = input("id",0);
 			$info = [];
 			if( $id ){
-				$info = Db::table('Role')->where([ 'id' => $id ])->find();
+				$info = DB::name('Role')->where([ 'id' => $id ])->find();
 			}
 			return $this->fetch("set",[
 				"info" => $info
@@ -55,20 +53,21 @@ class Roles extends  BaseController {
 			return $this->renderJSON([],"请输入合法的角色名称~~",-1);
 		}
 		//查询是否存在角色名相等的记录
-		$role_info = Db::table('Role')
+		$role_info = DB::name('Role')
 			->where([ 'name' => $name ])->Where('id','new',$id)
 			->find();
 		if( $role_info ){
 			return $this->renderJSON([],"该角色名称已存在，请输入其他的角色名称~~",-1);
 		}
 
-		$info = Db::table('Role')->where([ 'id' => $id ])->find();
+		$info = DB::name('Role')->where([ 'id' => $id ])->find();
 		if( $info ){//编辑动作
 			$role_model = $info;
 		}else{//添加动作
 			$role_model = new Role();
 			$role_model->created_time = $date_now;
 		}
+
 		$role_model->name = $name;
 		$role_model->updated_time = $date_now;
 
@@ -85,16 +84,16 @@ class Roles extends  BaseController {
 			if( !$id ){
                 $this->redirect( $reback_url );
 			}
-			$info = Db::table('Role')->where([ 'id' => $id ])->find();
+			$info = DB::name('Role')->where([ 'id' => $id ])->find();
 			if( !$info ){
                 $this->redirect( $reback_url );
 			}
 
 			//取出所有的权限
-			$access_list = Db::table('Access')->where([ 'status' => 1 ])->order('id desc')->select();
+			$access_list = DB::name('Access')->where([ 'status' => 1 ])->order('id desc')->select();
 
 			//取出所有已分配的权限
-			$role_access_list = Db::table('RoleAccess')->where([ 'role_id' => $id ])->select();
+			$role_access_list = DB::name('RoleAccess')->where([ 'role_id' => $id ])->select();
 			$access_ids = array_column( $role_access_list,"access_id" );
 			return $this->fetch("access",[
 				"info" => $info,
@@ -110,13 +109,13 @@ class Roles extends  BaseController {
 			return $this->renderJSON([],"您指定的角色不存在",-1);
 		}
 
-		$info = Db::table('Role')->where([ 'id' => $id ])->find();
+		$info = DB::name('Role')->where([ 'id' => $id ])->find();
 		if( !$info ){
 			return $this->renderJSON([],"您指定的角色不存在",-1);
 		}
 
 		//取出所有已分配给指定角色的权限
-		$role_access_list = Db::table('RoleAccess')->where([ 'role_id' => $id ])->select();
+		$role_access_list = DB::name('RoleAccess')->where([ 'role_id' => $id ])->select();
 		$assign_access_ids = array_column( $role_access_list,'access_id' );
 		/**
 		 * 找出删除的权限
@@ -126,7 +125,7 @@ class Roles extends  BaseController {
 		 */
 		$delete_access_ids = array_diff( $assign_access_ids,$access_ids );
 		if( $delete_access_ids ){
-			Db::table('RoleAccess')->where([ 'role_id' => $id,'access_id' => $delete_access_ids ])->delete();
+			DB::name('RoleAccess')->where([ 'role_id' => $id,'access_id' => $delete_access_ids ])->delete();
 		}
 
 		/**

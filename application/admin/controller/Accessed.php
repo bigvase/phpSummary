@@ -1,9 +1,9 @@
 <?php
 
-namespace app\controllers;
+namespace app\admin\controllers;
 
+use app\admin\model\Access;
 use app\common\controller\BaseController;
-use app\models\Access;
 use think\Db;
 use think\Request;
 
@@ -11,7 +11,7 @@ class Accessed extends BaseController {
 
 	//权限列表
     public function Index(){
-		$access_list = db('Access')->where([ 'status' => 1 ])->order('id desc')->select();
+		$access_list = Db::name('Access')->where([ 'status' => 1 ])->order('id desc')->select();
 		return $this->fetch('index',[
 			'list' => $access_list
 		]);
@@ -28,7 +28,7 @@ class Accessed extends BaseController {
 			$id = $this->get("id",0);
 			$info = [];
 			if( $id ){
-				$info = db('Access')->where([ 'status' => 1 ,'id' => $id ])->find();
+				$info = DB::name('Access')->where([ 'status' => 1 ,'id' => $id ])->find();
 			}
 			return $this->fetch('set',[
 				'info' => $info
@@ -53,13 +53,13 @@ class Accessed extends BaseController {
 		}
 
 		//查询同一标题的是否存在
-		$has_in = db('Access')->where([ 'title' => $title ])->where('id','neq',$id )->count();
+		$has_in = DB::name('Access')->where([ 'title' => $title ])->where('id','neq',$id )->count();
 		if( $has_in ){
 			return $this->renderJSON([],'该权限标题已存在~~',-1);
 		}
 
 		//查询指定id的权限
-		$info = Db::table('Access')->where([ 'id' => $id ])->select();
+		$info = DB::name('Access')->where([ 'id' => $id ])->select();
 		if( $info ){//如果存在则是编辑
 			$model_access = $info;
 		}else{//不存在就是添加
