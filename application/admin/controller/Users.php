@@ -20,6 +20,7 @@ class Users extends  BaseController{
 
     //用户列表
 	public function Index(){
+        echo 12121212;die;
 		//查询所有用户
 		$user_list = Db::name('User')->where([ 'status' => 1 ])->order([ 'id' => SORT_DESC ])->select();
 
