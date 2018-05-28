@@ -6,7 +6,6 @@
  * Time: 10:57
  */
 namespace app\admin\controller;
-
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use think\Db;
 use app\common\controller\CommonController;
@@ -16,8 +15,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 use Endroid\QrCode\QrCode;
-
-
 
 class Index extends CommonController
 {
@@ -35,10 +32,10 @@ class Index extends CommonController
     public function index()
     {
 
-        $data =['title'=>'权限名称','urls'=>'asdasdasd','status'=>1,'created_time'=>time()];
-        $ret = $this->validate($data,'Access.add', [], true);
-        dump($ret);
-        die;
+//        $data =['title'=>'权限名称','urls'=>'asdasdasd','status'=>1,'created_time'=>time()];
+//        $ret = $this->validate($data,'Access.add', [], true);
+//        dump($ret);
+//        die;
         return $this->fetch('index',['a'=>1]);
 //        $blog = model('blog');
 //        $ret = $blog->blogAdd();
