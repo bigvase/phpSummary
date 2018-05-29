@@ -1,5 +1,7 @@
 <?php
 namespace app\admin\service;
+use think\Exception;
+
 /**
  * Created by PhpStorm.
  * User: bigsave
@@ -16,12 +18,12 @@ class QueueService
     function __construct($redisKey, $expire=0, $redis='default')
     {
         if ( !extension_loaded('redis') ) {
-            throw_exception(L('_NOT_SUPPERT_').':redis');
+            exception('[not_support])'.':redis');
         }
-        $redis_config = C('REDIS');
+        $redis_config = Config('REDIS');
         $curr_redis_config = $redis_config[$redis];
         if (!isset($redis_config['default'])) {
-            throw_exception('请在配置文件中增加redis默认配置');
+            exception('请在配置文件中增加redis默认配置');
         }
 
         foreach ($redis_config['default'] as $key => $val) {
@@ -36,8 +38,8 @@ class QueueService
             'timeout'       => $curr_redis_config['timeout'] ? $curr_redis_config['timeout'] : false,
         );
 
-        $this->expire =  isset($expire)?  $expire  :   C('DATA_CACHE_TIME');
-        $this->prefix =  C('DATA_CACHE_PREFIX');
+        $this->expire =  isset($expire)?  $expire  :   Config('DATA_CACHE_TIME');
+        $this->prefix =  Config('DATA_CACHE_PREFIX');
 
         try {
             $this->handler = new Redis;
@@ -48,11 +50,11 @@ class QueueService
             if ($curr_redis_config['password']) {
                 $rel = $this->handler->auth($curr_redis_config['password']);
                 if (!$rel) {
-                    throw_exception("redis 认证密码错误");
+                    exception("redis 认证密码错误");
                 }
             }
 
-        } catch (RedisException $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -97,12 +99,12 @@ class QueueService
         }
         $time = $this->pTtl($key);
         if($time == -2){
-            throw_exception($key.'不存在');
+            exception($key.'不存在');
         }
         try {
             $result = $this -> handler -> expire($key, $ttl);
         }catch (Exception $e) {
-            throw_exception("queue error");
+            exception("queue error");
             return false;
         }
         return $result ? true : false;
@@ -123,7 +125,7 @@ class QueueService
         try{
             $result = $this->handler->pttl($key);
         }catch(Exception $e){
-            throw_exception('queue pttl error');
+            exception('queue pttl error');
         }
         return $result;
     }
@@ -196,7 +198,7 @@ class QueueService
         try {
             $result = $this -> handler -> $func($key, $value);
         }catch (Exception $e) {
-            throw_exception('push queue error!');
+            exception('push queue error!');
             return false;
         }
 
@@ -243,7 +245,7 @@ class QueueService
         try {
             $result = $this -> handler -> $func($key);
         }catch(Exception $e){
-            throw_exception('pop queue error1');
+            exception('pop queue error1');
             return false;
         }
 
@@ -266,7 +268,7 @@ class QueueService
         try {
             $result = $this -> handler -> incr($key);
         }catch(Exception $e){
-            throw_exception('queue incr error');
+            exception('queue incr error');
             return false;
         }
 
@@ -288,7 +290,7 @@ class QueueService
         try {
             $result = $this -> handler -> decr($key);
         }catch(Exception $e){
-            throw_exception('queue decr error');
+            exception('queue decr error');
             return false;
         }
 
@@ -347,7 +349,6 @@ class QueueService
      */
     public function lock($key, $expire=5){
         $is_lock = $this->handler->setnx($key, time()+$expire);
-
         // 不能获取锁
         if(!$is_lock){
             // 判断锁是否过期

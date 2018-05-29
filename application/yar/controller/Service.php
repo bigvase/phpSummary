@@ -37,5 +37,9 @@ class Service extends CommonController
     function callback($retval, $callinfo) {
         var_dump($retval);
     }
+    public function test1(){
+        $demo = \think\Loader::model('yar/YarService','service');
+        dump($demo);
+    }
 
 }

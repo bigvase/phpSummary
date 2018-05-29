@@ -1,5 +1,5 @@
 <?php
-
+namespace app\yar\service;
 /**
  * Created by PhpStorm.
  * User: bigsave

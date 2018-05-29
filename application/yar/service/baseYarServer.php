@@ -1,4 +1,5 @@
 <?php
+namespace app\yar\service;
 
 /**
  * Created by PhpStorm.
