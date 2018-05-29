@@ -45,4 +45,8 @@ class Login extends CommonController
 
     }
 
+    public function test(){
+
+        return $this->fetch();
+    }
 }

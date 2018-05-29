@@ -6,7 +6,7 @@
  * Time: 10:57
  */
 namespace app\admin\controller;
-use Picqer\Barcode\BarcodeGeneratorPNG;
+
 use think\Db;
 use app\common\controller\CommonController;
 use app\admin\model\NameList;
@@ -85,51 +85,8 @@ class Index extends CommonController
         }
     }
 
-    /**
-     * endroid qrcode
-     */
-    public function qrCode(){
-
-        vendor('endroid/qrcode/src/QrCode');
-
-        $qrCode = new QrCode();
-//        echo ;die;
-//        dump($qrCode) ;die;
-        $qrCode
-            ->setText('ddLife is too short to be generating QR codes11')
-            ->setImagePath(dirname(dirname(dirname(dirname(__FILE__)))).'/data')
-            ->setSize(300)
-            ->setPadding(10)
-            ->setErrorCorrection('high')
-            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0])
-            ->setLabel('aScan the code')
-            ->setLabelFontSize(16)
-            ->setImageType(QrCode::IMAGE_TYPE_PNG)
-        ;
-
-// now we can directly output the qrcode
-        header('Content-Type: '.$qrCode->getContentType());
-//        $qrCode->render();
-
-// save it to a file
-//        $qrCode->save('qrcode.png');
-
-// or create a response object
-//        $response = new Response($qrCode->get(), 200, ['Content-Type' => $qrCode->getContentType()]);
-
-    }
-
-    /**
-     * barcode
-     */
-    public function barcode(){
-        vendor('picqer.barcode.src.BarcodeGeneratorPNG');
-//        export_class_look();
-        $generator = new BarcodeGeneratorPNG();
-        echo $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
 
 
-    }
+
 
 }

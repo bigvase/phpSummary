@@ -27,9 +27,9 @@ class BaseController extends  Controller{
 		'user/login'
 	];
 	//前置操作
-    protected $beforeActionList = [
-        '_beforeAction',
-    ];
+//    protected $beforeActionList = [
+//        '_beforeAction',
+//    ];
 
 	public $privilege_urls = [];//保存去的权限链接
 

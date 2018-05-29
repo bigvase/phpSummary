@@ -3,7 +3,7 @@
  * Class TestController
  */
 
-namespace app\admin\controllers;
+namespace app\admin\controller;
 
 
 use app\common\controller\BaseController;
@@ -30,6 +30,8 @@ class Test extends  BaseController {
 //        die;
     }
     public function index(){
-
+        qrCode();
+        die;
+        $this->fetch('index',[]);
     }
 }
