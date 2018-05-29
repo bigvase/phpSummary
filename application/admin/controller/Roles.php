@@ -34,7 +34,7 @@ class Roles extends  BaseController {
 	 * get 展示页面
 	 * post 处理添加或者编辑动作
 	 */
-	public function actionSet(){
+	public function roleSet(){
 		if( Request::instance()->get() ){
 			$id = input("id",0);
 			$info = [];
@@ -48,35 +48,36 @@ class Roles extends  BaseController {
 
 		$id = input("id",0);
 		$name = input("name","");
-		$date_now = date("Y-m-d H:i:s");
 		if( !$name ){
-			return $this->renderJSON([],"请输入合法的角色名称~~",-1);
+            $this->error("请输入合法的角色名称~~");
 		}
 		//查询是否存在角色名相等的记录
 		$role_info = DB::name('Role')
-			->where([ 'name' => $name ])->Where('id','new',$id)
+			->where([ 'name' => $name,'id'=>['<>',$id]])
 			->find();
 		if( $role_info ){
-			return $this->renderJSON([],"该角色名称已存在，请输入其他的角色名称~~",-1);
+			$this->error("该角色名称已存在，请输入其他的角色名称~~");
 		}
 
 		$info = DB::name('Role')->where([ 'id' => $id ])->find();
+		$saveDt = [
+		    'name'=>$name,
+            'status'=>1
+        ];
 		if( $info ){//编辑动作
-			$role_model = $info;
+            $saveDt['updated_time'] = time();
+            $ret = DB::name('Role')->where(['id'=>$id])->update($saveDt);
+            if($ret) $this->success('修改成功~~');
 		}else{//添加动作
-			$role_model = new Role();
-			$role_model->created_time = $date_now;
+            $saveDt['created_time'] = time();
+            $ret = DB::name('Role')->insert($saveDt);
+            if($ret) $this->success('添加成功');
 		}
-
-		$role_model->name = $name;
-		$role_model->updated_time = $date_now;
-
-		$role_model->save(0);
-		return $this->renderJSON([],"操作成功~~",200);
+		$this->error("操作失败~~");
 	}
 
 	//设置角色和权限的关系逻辑
-	public function actionAccess(){
+	public function Access(){
 		//http get 请求 展示页面
 		if( Request::instance()->get() ){
 			$id = input("id",0);
@@ -103,20 +104,20 @@ class Roles extends  BaseController {
 		}
 		//实现保存选中权限的逻辑
 		$id = input("id",0);
-		$access_ids = input("access_ids",[]);
-
+		$access_ids = $_POST["access_ids"];
 		if( !$id ){
-			return $this->renderJSON([],"您指定的角色不存在",-1);
+            $this->error("您指定的角色不存在");
 		}
 
 		$info = DB::name('Role')->where([ 'id' => $id ])->find();
 		if( !$info ){
-			return $this->renderJSON([],"您指定的角色不存在",-1);
+            $this->error("您指定的角色不存在");
 		}
 
 		//取出所有已分配给指定角色的权限
 		$role_access_list = DB::name('RoleAccess')->where([ 'role_id' => $id ])->select();
-		$assign_access_ids = array_column( $role_access_list,'access_id' );
+
+		$assign_access_ids = array_column( $role_access_list , 'access_id' );
 		/**
 		 * 找出删除的权限
 		 * 假如已有的权限集合是A，界面传递过得权限集合是B
@@ -124,8 +125,10 @@ class Roles extends  BaseController {
 		 * 使用 array_diff() 计算补集
 		 */
 		$delete_access_ids = array_diff( $assign_access_ids,$access_ids );
+
 		if( $delete_access_ids ){
-			DB::name('RoleAccess')->where([ 'role_id' => $id,'access_id' => $delete_access_ids ])->delete();
+            $delete_access_string = implode(',',$delete_access_ids);
+			DB::name('RoleAccess')->where([ 'role_id' => $id,'access_id' => [ 'in',$delete_access_string ] ])->delete();
 		}
 
 		/**
@@ -137,13 +140,14 @@ class Roles extends  BaseController {
 		$new_access_ids = array_diff( $access_ids,$assign_access_ids );
 		if( $new_access_ids ){
 			foreach( $new_access_ids as $_access_id  ){
-				$tmp_model_role_access = new RoleAccess();
-				$tmp_model_role_access->role_id = $id;
-				$tmp_model_role_access->access_id = $_access_id;
-				$tmp_model_role_access->created_time = date("Y-m-d H:i:s");
-				$tmp_model_role_access->save( 0 );
+			    $saveDt = [
+			        'role_id'=>$id,
+                    'access_id'=>$_access_id,
+                    'created_time'=>time()
+                ];
+                DB::name('RoleAccess')->insert($saveDt);
 			}
 		}
-		return $this->renderJSON([],"操作成功~~",200 );
+        $this->success("操作成功~~");
 	}
 }

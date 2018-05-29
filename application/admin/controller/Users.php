@@ -20,12 +20,11 @@ class Users extends  BaseController{
 
     //用户列表
 	public function Index(){
-        echo 12121212;die;
 		//查询所有用户
 		$user_list = Db::name('User')->where([ 'status' => 1 ])->order([ 'id' => SORT_DESC ])->select();
 		//判断当前用户时候有访问添加或编辑用户的权限
 		$set_flag = $this->checkPrivilege( "user/set" );
-//		dump($user_list);die;
+
 		return $this->fetch('index',[
 			'list' => $user_list,
 			'set_flag' => $set_flag
@@ -43,25 +42,85 @@ class Users extends  BaseController{
             $user = Db::name('user')->where(['id'=>$uid,'status'=>1])->find();
             $this->assign('user',$user);
         }
-        if(Request::instance()->post('id')){
+        if(Request::instance()->post()){
+            $saveDt = [];
             $id = intval( input("id",0) );
-            $name = trim( input("name","") );
-            $email = trim( input("email","") );
+            $saveDt['name']  = trim( input("name","") );
+            $saveDt['email'] = trim( input("email","") );
+            $saveDt['created_time'] = time();
+            $saveDt['is_admin'] = trim( input("is_admin",''));
+            $role_ids = [1,3,4,5];//$_POST["role_ids"];//选中的角色id
 
-//            $this->validate()
-            if( mb_strlen($name,"utf-8") < 1 || mb_strlen($name,"utf-8") > 20 ){
+            if( mb_strlen($saveDt['name'],"utf-8") < 1 || mb_strlen($saveDt['name'],"utf-8") > 20 ){
                  $this->error('',Url('/admin/users/index'));
             }
 
-            if( !filter_var( $email , FILTER_VALIDATE_EMAIL) ){
-                return $this->renderJSON([],'请输入合法的邮箱~~',-1);
+            if( !filter_var( $saveDt['email'] , FILTER_VALIDATE_EMAIL) ){
+                $this->error('请输入合法的邮箱~~');
             }
-            //查询该邮箱是否已经存在
-            $has_in = DB::name('User')->where([ 'email' => $email ])->Where('id','neq',$id)->count();
-        }
+            //更新
+            if($id){
+                $saveDt['updated_time'] = time();
+                $user = DB::name('User')->where(['id'=>$id])->find();
 
+                if(!$user) $this->error('更新用户不存在~~');
+
+                $has_in = DB::name('User')->where(['email'=>$saveDt['email'],'id'=>['neq',$id]])->find();
+
+                if($has_in) $this->error('邮箱已存在~~');
+                $ret = DB::name('User')->where(['id'=>$id])->update($saveDt);
+
+            }else{
+                //查询该邮箱是否已经存在
+                $has_in = DB::name('User')->where([ 'email' => $saveDt['email'] ])->count();
+                if($has_in) $this->error('邮箱已存在~~');
+                $ret = DB::name('User')->insert($saveDt);
+                if($ret) $id = Db::name('User')->getLastInsID();
+
+            }
+            if($ret){
+                /**
+                 * 找出删除的角色
+                 * 假如已有的角色集合是A，界面传递过得角色集合是B
+                 * 角色集合A当中的某个角色不在角色集合B当中，就应该删除
+                 * array_diff();计算补集
+                 */
+                $user_role_list = DB::name('UserRole')->where([ 'uid' => $id ])->select();
+                $related_role_ids = [];
+                if( $user_role_list ){
+                    foreach( $user_role_list as $_item ){
+                        $related_role_ids[] = $_item['role_id'];
+                        if( !in_array( $_item['role_id'],$role_ids ) ){
+                            DB::name('UserRole')->where(['uid'=>$id,'role_id'=>$_item['role_id']])->delete();
+                        }
+                    }
+                }
+                /**
+                 * 找出添加的角色
+                 * 假如已有的角色集合是A，界面传递过得角色集合是B
+                 * 角色集合B当中的某个角色不在角色集合A当中，就应该添加
+                 */
+                if ( $role_ids ){
+                    foreach( $role_ids as $_role_id ){
+                        if( !in_array( $_role_id ,$related_role_ids ) ){
+                            $sDt = [
+                                'uid'     => $id,
+                                'role_id' => $_role_id,
+                                'created_time'=>time()
+                            ];
+                            DB::name('UserRole')->insert($sDt);
+                        }
+                    }
+                }
+                $this->success('添加数据成功~~~');
+            }else{
+                $this->error('添加数据异常~~');
+            }
+        }
         return $this->fetch('userSet',[]);
 	}
+
+
 
 
 
