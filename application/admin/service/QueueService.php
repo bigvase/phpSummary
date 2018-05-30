@@ -15,12 +15,13 @@ class QueueService
     private $handler = null;
     private $expire = 3600;
 
-    function __construct($redisKey, $expire=0, $redis='default')
+    function __construct($redisKey = '', $expire=0, $redis='default')
     {
         if ( !extension_loaded('redis') ) {
             exception('[not_support])'.':redis');
         }
         $redis_config = Config('REDIS');
+//        dump($redis_config);die;
         $curr_redis_config = $redis_config[$redis];
         if (!isset($redis_config['default'])) {
             exception('请在配置文件中增加redis默认配置');
@@ -42,7 +43,7 @@ class QueueService
         $this->prefix =  Config('DATA_CACHE_PREFIX');
 
         try {
-            $this->handler = new Redis;
+            $this->handler = new \Redis;
             $this->key = $this->prefix . $redisKey;
             $options['timeout'] === false ?
                 $this->handler->connect($options['host'], $options['port']) :

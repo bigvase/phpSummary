@@ -2,7 +2,7 @@
 use Endroid\QrCode\QrCode;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use think\Response;
-
+include './interface.php';
 /**
  * Created by PhpStorm.
  * User: bigsave

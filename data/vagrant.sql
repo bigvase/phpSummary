@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-05-18 18:02:12
+Date: 2018-05-30 20:58:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,11 +27,13 @@ CREATE TABLE `vt_access` (
   `updated_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后一次更新时间',
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='权限详情表';
 
 -- ----------------------------
 -- Records of vt_access
 -- ----------------------------
+INSERT INTO `vt_access` VALUES ('1', 'a权限', 'index.php/admin/user/set', '1', '0', '1527564618');
+INSERT INTO `vt_access` VALUES ('2', 'b权限1', 'index.php/admin/user/index', '1', '1527564769', '1527564684');
 
 -- ----------------------------
 -- Table structure for vt_app_access_log
@@ -87,17 +89,18 @@ CREATE TABLE `vt_role` (
   `updated_time` int(11) NOT NULL DEFAULT '0' COMMENT '最后一次更新时间',
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Records of vt_role
 -- ----------------------------
-INSERT INTO `vt_role` VALUES ('1', '王者', '1', '0', '0');
-INSERT INTO `vt_role` VALUES ('2', '星耀', '1', '0', '0');
-INSERT INTO `vt_role` VALUES ('3', '砖石', '1', '0', '0');
-INSERT INTO `vt_role` VALUES ('4', '黄金', '1', '0', '0');
-INSERT INTO `vt_role` VALUES ('5', '白银', '1', '0', '0');
-INSERT INTO `vt_role` VALUES ('6', '青铜', '1', '0', '0');
+INSERT INTO `vt_role` VALUES ('1', '王者', '1', '1527565831', '1527565795');
+INSERT INTO `vt_role` VALUES ('2', '星耀', '1', '0', '1527565795');
+INSERT INTO `vt_role` VALUES ('3', '砖石', '1', '0', '1527565795');
+INSERT INTO `vt_role` VALUES ('4', '黄金', '1', '0', '1527565795');
+INSERT INTO `vt_role` VALUES ('5', '白银', '1', '0', '1527565795');
+INSERT INTO `vt_role` VALUES ('6', '青铜', '1', '0', '1527565795');
+INSERT INTO `vt_role` VALUES ('7', 'qqq', '1', '0', '1527565795');
 
 -- ----------------------------
 -- Table structure for vt_role_access
@@ -110,10 +113,35 @@ CREATE TABLE `vt_role_access` (
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`),
   KEY `idx_role_id` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='角色权限表';
 
 -- ----------------------------
 -- Records of vt_role_access
+-- ----------------------------
+INSERT INTO `vt_role_access` VALUES ('3', '1', '3', '1527574516');
+INSERT INTO `vt_role_access` VALUES ('6', '1', '4', '1527575172');
+
+-- ----------------------------
+-- Table structure for vt_service_request_log
+-- ----------------------------
+DROP TABLE IF EXISTS `vt_service_request_log`;
+CREATE TABLE `vt_service_request_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `platform` varchar(255) DEFAULT NULL,
+  `serviceName` varchar(255) DEFAULT NULL,
+  `requestNo` text,
+  `request` longtext,
+  `requestTime` int(11) DEFAULT NULL,
+  `requestIp` varchar(63) DEFAULT NULL,
+  `return` longtext,
+  `returnNum` varchar(11) DEFAULT NULL,
+  `returnResp` longtext,
+  `returnTime` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Records of vt_service_request_log
 -- ----------------------------
 
 -- ----------------------------
@@ -130,7 +158,7 @@ CREATE TABLE `vt_user` (
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`),
   KEY `idx_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of vt_user
@@ -141,6 +169,9 @@ INSERT INTO `vt_user` VALUES ('3', '李四', 'lisi@163.com', '0', '1', '0', '0')
 INSERT INTO `vt_user` VALUES ('4', '王五', 'wangwu@163.com', '0', '1', '0', '0');
 INSERT INTO `vt_user` VALUES ('5', '马六', 'maliu@163.com', '0', '1', '0', '0');
 INSERT INTO `vt_user` VALUES ('6', '黄七', 'huangqi@163.com', '0', '1', '0', '0');
+INSERT INTO `vt_user` VALUES ('7', 'lmx1', 'lmx@qq.com', '1', '1', '1527578188', '1527578188');
+INSERT INTO `vt_user` VALUES ('8', 'lmx3', 'lmx3@qq.com', '1', '1', '0', '1527578216');
+INSERT INTO `vt_user` VALUES ('9', 'lmx4', 'lmx4@qq.com', '1', '1', '0', '1527578623');
 
 -- ----------------------------
 -- Table structure for vt_user_role
@@ -153,15 +184,20 @@ CREATE TABLE `vt_user_role` (
   `created_time` int(11) NOT NULL DEFAULT '0' COMMENT '插入时间',
   PRIMARY KEY (`id`),
   KEY `idx_uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='用户角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='用户角色表';
 
 -- ----------------------------
 -- Records of vt_user_role
 -- ----------------------------
-INSERT INTO `vt_user_role` VALUES ('1', '1', '1', '0');
-INSERT INTO `vt_user_role` VALUES ('2', '2', '2', '0');
-INSERT INTO `vt_user_role` VALUES ('3', '3', '3', '0');
-INSERT INTO `vt_user_role` VALUES ('4', '4', '4', '0');
-INSERT INTO `vt_user_role` VALUES ('5', '5', '5', '0');
-INSERT INTO `vt_user_role` VALUES ('6', '6', '6', '0');
-INSERT INTO `vt_user_role` VALUES ('7', '7', '3', '0');
+INSERT INTO `vt_user_role` VALUES ('8', '7', '1', '1527578077');
+INSERT INTO `vt_user_role` VALUES ('10', '7', '3', '1527578077');
+INSERT INTO `vt_user_role` VALUES ('11', '7', '4', '1527578100');
+INSERT INTO `vt_user_role` VALUES ('12', '7', '5', '1527578189');
+INSERT INTO `vt_user_role` VALUES ('13', '1', '1', '1527578216');
+INSERT INTO `vt_user_role` VALUES ('14', '1', '3', '1527578216');
+INSERT INTO `vt_user_role` VALUES ('15', '1', '4', '1527578216');
+INSERT INTO `vt_user_role` VALUES ('16', '1', '5', '1527578216');
+INSERT INTO `vt_user_role` VALUES ('17', '9', '1', '1527578623');
+INSERT INTO `vt_user_role` VALUES ('18', '9', '3', '1527578623');
+INSERT INTO `vt_user_role` VALUES ('19', '9', '4', '1527578623');
+INSERT INTO `vt_user_role` VALUES ('20', '9', '5', '1527578623');

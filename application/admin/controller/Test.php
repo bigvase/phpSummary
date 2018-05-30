@@ -10,28 +10,28 @@ use app\common\controller\BaseController;
 
 class Test extends  BaseController {
 	public function test(){
-//        $blog = model('blog');
-//        $ret = $blog->blogAdd();
-//        dump($ret);die;
-//        echo "a";die;
-//        $demo = \think\Loader::model('admin/SignService','service');
-////        $key = $demo->create_key();
-////        dump($key);die;
-//        $str = '加密解密';
-//        $str = $demo->public_encrypt($str); //用公密钥加密
-//        echo $str.'</br>';
-//        $str = $demo->private_decrypt($str); //用私密钥解密
-//        echo $str.'</br>';
-//            //=============================================================
-//        $str = $demo->private_encrypt($str); //用丝密钥加密
-//        echo $str.'</br>';
-//        $str = $demo->public_decrypt($str); //用公密钥解密
-//        echo $str.'</br>';
-//        die;
+        $demo = \think\Loader::model('admin/HttpRequestService','service');
+        $demo->test();
     }
     public function index(){
-        qrCode();
-        die;
-        $this->fetch('index',[]);
+        $file = ROOT_PATH.'data/log.txt';
+        $file1 = ROOT_PATH.'data/log1.txt';
+//        $queue = \think\Loader::model('admin/QueueService','service');
+//        $key = 'aaa_bbb11';
+//        $lock = $queue->lock($key);
+//        if($lock){
+//            $ib = file_get_contents($file1);
+//            file_put_contents($file1,$ib+1);
+//            return false;
+//        }
+        $ic = file_get_contents($file);
+        for ($i= 0;$i<100000;$i++){
+            $a = 1;
+        }
+        if($ic == 0){
+            return false;
+        }
+        file_put_contents($file,$ic-1);
+//        $queue->unlock($key);
     }
 }
