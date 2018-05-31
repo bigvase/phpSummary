@@ -66,7 +66,7 @@ class Server extends controller
         try {
             DB::name('service_request_log')->where(['requestNo' => $service->requestNo, 'platform' => $service->username])->update($saveData);
         } catch (Exception $e) {
-            
+
         }
     }
 
