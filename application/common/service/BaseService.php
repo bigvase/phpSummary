@@ -11,7 +11,6 @@ class BaseService {
 
 
     function __construct() {
-        echo 1;
     }
 
 

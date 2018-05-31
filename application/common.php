@@ -296,3 +296,16 @@ function get_row_txt($filename,$rowStart,$num,$type=','){
     }
 }
 
+
+/**
+ * 下划线转驼峰 name_string nameString
+ * @param $name
+ * @param bool $first
+ * @return mixed|string
+ */
+function underlined_hump($name,$first= true){
+    $str = ucwords(str_replace('_', ' ', $name));
+    $str = str_replace(' ', '', lcfirst($str));
+    return $first ? lcfirst($str) : $str;
+}
+
