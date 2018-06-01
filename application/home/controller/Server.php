@@ -9,6 +9,7 @@
 namespace app\home\controller;
 
 
+use think\Config;
 use think\Controller;
 use think\Db;
 use think\Exception;
@@ -74,7 +75,7 @@ class Server extends controller
         $interName = input('interName');
         $username  = input('platform');
         $reqData   = json_decode(input('detailData'),true);
-        $interConfig = \think\Config::load(APP_PATH . "admin/interfaceParam.php",'','admin');
+        $interConfig = Config::get('interfaceParam');
 
         if (!in_array($interName, $interConfig['interface_name'])) exception("{$interName}方法不存在");
         //尝试调用

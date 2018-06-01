@@ -10,6 +10,7 @@ namespace app\admin\service;
 
 
 use app\common\service\BaseService;
+use think\Config;
 use think\Db;
 use think\Exception;
 
@@ -33,7 +34,7 @@ class HttpRequestService extends BaseService
         $this->timestamp = $_POST['timestamp'];
         $this->username  = $_POST['platform'];
         $this->requestNo = $this->reqData['requestNo'];
-        $this->interConfig = \think\Config::load(APP_PATH . "admin/interfaceParam.php",'','admin');
+        $this->interConfig = Config::get('interfaceParam');
         $this->requestEntrance();
     }
     /**

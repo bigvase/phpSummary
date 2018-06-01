@@ -8,33 +8,44 @@ namespace app\admin\logic;
  */
 class fileLogic
 {
-    //创建目录
-    function forcemkdir($path){
+    /**
+     * 创建目录
+     * @param $path
+     */
+    public function makeDir($path){
         if(!file_exists($path)){
-            $this->forcemkdir(dirname($path));
-            mkdir($path,0777);
+            $this->makeDir(dirname($path));
+            mkdir($path,0777,true);
         }
     }
-    //检测文件是否存在
-    function iswriteable($file){
-        $writeable=0;
+    /**
+     * 检测文件是否存在
+     * @param $file
+     * @return int
+     */
+    public function isWriteAble($file){
+        $writeAble=0;
         if(is_dir($file)){
             $dir=$file;
             if($fp=@fopen("$dir/test.txt",'w')){
                 @fclose($fp);
                 @unlink("$dir/test.txt");
-                $writeable=1;
+                $writeAble=1;
             }
         }else{
             if($fp=@fopen($file,'a+')){
                 @fclose($fp);
-                $writeable=1;
+                $writeAble=1;
             }
         }
-        return $writeable;
+        return $writeAble;
     }
-    //删除当前目录下的文件或目录
-    function cleardir($dir,$forceclear=false) {
+    /**
+     * 删除当前目录下的文件或目录
+     * @param $dir
+     * @param bool $forceClear
+     */
+    public function clearDir($dir,$forceClear=false) {
         if(!is_dir($dir)){
             return;
         }
@@ -43,23 +54,27 @@ class fileLogic
             $filename=$dir.'/'.$entry;
             if(is_file($filename)){
                 @unlink($filename);
-            }elseif(is_dir($filename)&$forceclear&$entry!='.'&$entry!='..'){
+            }elseif(is_dir($filename)&$forceClear&$entry!='.'&$entry!='..'){
                 chmod($filename,0777);
-                $this->cleardir($filename,$forceclear);
+                $this->clearDir($filename,$forceClear);
                 rmdir($filename);
             }
         }
         $directory->close();
     }
-    //删除当前目录及目录下的文件
-    function removedir($dir){
+    /**
+     * 删除当前目录及目录下的文件
+     * @param $dir
+     * @return bool
+     */
+    public function removeDir($dir){
         if (is_dir($dir) && !is_link($dir)){
             if ($dh=opendir($dir)){
                 while (($sf= readdir($dh))!== false){
                     if('.'==$sf || '..'==$sf){
                         continue;
                     }
-                    $this->removedir($dir.'/'.$sf);
+                    $this->removeDir($dir.'/'.$sf);
                 }
                 closedir($dh);
             }
@@ -67,27 +82,36 @@ class fileLogic
         }
         return @unlink($dir);
     }
-    //复制文件
-    function copydir($srcdir, $dstdir) {
-        if(!is_dir($dstdir)) mkdir($dstdir);
-        if($curdir = opendir($srcdir)) {
-            while($file = readdir($curdir)) {
+    /**
+     * 复制文件
+     * @param $srcDir
+     * @param $dstDir
+     */
+    public function copyDir($srcDir, $dstDir) {
+        if(!is_dir($dstDir)) mkdir($dstDir);
+        if($curDir = opendir($srcDir)) {
+            while($file = readdir($curDir)) {
                 if($file != '.' && $file != '..') {
-                    $srcfile = $srcdir . '/' . $file;
-                    $dstfile = $dstdir . '/' . $file;
-                    if(is_file($srcfile)) {
-                        copy($srcfile, $dstfile);
+                    $srcFile = $srcDir . '/' . $file;
+                    $dstFile = $dstDir . '/' . $file;
+                    if(is_file($srcFile)) {
+                        copy($srcFile, $dstFile);
                     }
-                    else if(is_dir($srcfile)) {
-                        $this->copydir($srcfile, $dstfile);
+                    else if(is_dir($srcFile)) {
+                        $this->copyDir($srcFile, $dstFile);
                     }
                 }
             }
-            closedir($curdir);
+            closedir($curDir);
         }
     }
-    //读取文件
-    function readfromfile($filename) {
+
+    /**
+     * 读取文件
+     * @param $filename
+     * @return bool|string
+     */
+    public function readFile($filename) {
         if ($fp=@fopen($filename,'rb')) {
             if(PHP_VERSION >='4.3.0' && function_exists('file_get_contents')){
                 return file_get_contents($filename);
@@ -102,8 +126,13 @@ class fileLogic
             return '';
         }
     }
-    //写入文件
-    function writetofile($filename,$data){
+    /**
+     * 写入文件
+     * @param $filename
+     * @param $data
+     * @return bool|int|void
+     */
+    public function writeToFile($filename,$data){
         if($fp=@fopen($filename,'wb')){
             if (PHP_VERSION >='4.3.0' && function_exists('file_put_contents')) {
                 return @file_put_contents($filename,$data);
@@ -119,7 +148,7 @@ class fileLogic
         }
     }
     //上传文件
-    function uploadfile($attachment,$target,$maxsize=1024,$is_image=1){
+    public function uploadfile($attachment,$target,$maxsize=1024,$is_image=1){
         $result=array ('result'=>false,'msg'=>'upload mistake');
         if($is_image){
             $attach=$attachment;
@@ -140,7 +169,7 @@ class fileLogic
             $attach['tmp_name']=$attachment;
         }
         $filedir=dirname($target);
-        $this->forcemkdir($filedir);
+        $this->makeDir($filedir);
         if(@copy($attach['tmp_name'],$target) || @move_uploaded_file($attach['tmp_name'],$target)){
             $result['result']=true;
             $result['msg'] ='上传成功';
@@ -161,7 +190,7 @@ class fileLogic
         }
         return $result;
     }
-    function hheader($string, $replace = true, $http_response_code = 0){
+    public function hheader($string, $replace = true, $http_response_code = 0){
         $string = str_replace(array("\r", "\n"), array('', ''), $string);
         if(emptyempty($http_response_code) || PHP_VERSION <'4.3'){
             @header($string, $replace);
@@ -172,51 +201,62 @@ class fileLogic
             exit();
         }
     }
-    //下载文件
-    function downloadfile($filepath,$filename=''){
+
+    /**
+     * 下载文件
+     * @param $filePath
+     * @param string $filename
+     * @return int
+     */
+    public function downloadFile($filePath,$filename=''){
         global $encoding;
-        if(!file_exists($filepath)){
+        if(!file_exists($filePath)){
             return 1;
         }
         if(''==$filename){
-            $tem=explode('/',$filepath);
+            $tem=explode('/',$filePath);
             $num=count($tem)-1;
             $filename=$tem[$num];
-            $filetype=substr($filepath,strrpos($filepath,".")+1);
+            $fileType=substr($filePath,strrpos($filePath,".")+1);
         }else{
-            $filetype=substr($filename,strrpos($filename,".")+1);
+            $fileType=substr($filename,strrpos($filename,".")+1);
         }
         $filename ='"'.(strtolower($encoding) == 'utf-8' && !(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') === FALSE) ? urlencode($filename) : $filename).'"';
-        $filesize = filesize($filepath);
+        $fileSize = filesize($filePath);
         $dateline=time();
         $this->hheader('date: '.gmdate('d, d m y h:i:s', $dateline).' gmt');
         $this->hheader('last-modified: '.gmdate('d, d m y h:i:s', $dateline).' gmt');
         $this->hheader('content-encoding: none');
         $this->hheader('content-disposition: attachment; filename='.$filename);
-        $this->hheader('content-type: '.$filetype);
-        $this->hheader('content-length: '.$filesize);
+        $this->hheader('content-type: '.$fileType);
+        $this->hheader('content-length: '.$fileSize);
         $this->hheader('accept-ranges: bytes');
         if(!@emptyempty($_SERVER['HTTP_RANGE'])) {
             list($range) = explode('-',(str_replace('bytes=', '', $_SERVER['HTTP_RANGE'])));
-            $rangesize = ($filesize - $range) > 0 ?  ($filesize - $range) : 0;
-            $this->hheader('content-length: '.$rangesize);
+            $rangeSize = ($fileSize - $range) > 0 ?  ($fileSize - $range) : 0;
+            $this->hheader('content-length: '.$rangeSize);
             $this->hheader('http/1.1 206 partial content');
-            $this->hheader('content-range: bytes='.$range.'-'.($filesize-1).'/'.($filesize));
+            $this->hheader('content-range: bytes='.$range.'-'.($fileSize-1).'/'.($fileSize));
         }
-        if($fp = @fopen($filepath, 'rb')) {
+        if($fp = @fopen($filePath, 'rb')) {
             @fseek($fp, $range);
-            echo fread($fp, filesize($filepath));
+            echo fread($fp, filesize($filePath));
         }
         fclose($fp);
         flush();
         ob_flush();
     }
-    //返回文件类型
-    function extname($filename){
-        $pathinfo=pathinfo($filename);
-        return strtolower($pathinfo['extension']);
+
+    /**
+     * 返回文件类型
+     * @param $filename
+     * @return string
+     */
+    public function extName($filename){
+        $pathInfo=pathinfo($filename);
+        return strtolower($pathInfo['extension']);
     }
-    function createaccessfile($path){
+    public function createAccessFile($path){
         if(!file_exists($path.'index.htm')){
             $content=' ';
             $this->writetofile($path.'index.htm',$content);
@@ -226,16 +266,42 @@ class fileLogic
             $this->writetofile($path.'.htaccess',$content);
         }
     }
-    //返回文件大小
-    function getdirsize($filedir){
-        $handle=opendir($filedir);
-        $totalsize = 0;
+
+    /**
+     * 返回文件大小
+     * @param $fileDir
+     * @return int
+     */
+    public function getDirSize($fileDir){
+        $handle=opendir($fileDir);
+        $totalSize = 0;
         while($filename=readdir($handle)){
             if ('.' != $filename && '..' != $filename){
-                $totalsize += is_dir($filedir.'/'.$filename) ? $this->getdirsize($filedir.'/'.$filename) : (int)filesize($filedir.'/'.$filename);
+                $totalSize += is_dir($fileDir.'/'.$filename) ? $this->getDirSize($fileDir.'/'.$filename) : (int)filesize($fileDir.'/'.$filename);
             }
         }
-        return $totalsize;
+        return $totalSize;
     }
+
+    /**
+     * 按行读取
+     * @param $filename
+     * @param $rowStart
+     * @param $num
+     */
+    public function get_row_txt($filename,$rowStart,$num,$type=','){
+        $row     = 0; //行数
+        $pointer = 0; //指针
+        $dt      = []; //容器
+        $f = fopen($filename,'r');
+        while (!feof($f) && $row<=$num)
+        {
+            $pointer ++;
+            $line = fgets($f,2048);//fgets指针自动下移
+            if($pointer > $rowStart){
+                $dt[] = explode($type, $line);
+            }
+    }
+}
 
 }

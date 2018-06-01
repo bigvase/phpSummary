@@ -10,5 +10,7 @@
 // +----------------------------------------------------------------------
 
 return [
-    'application\schedules\cli.php'
+    'application\schedules\cli.php',
+    'app\admin\command\test',//测试命令行
+
 ];

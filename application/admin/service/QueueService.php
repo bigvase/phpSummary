@@ -355,7 +355,7 @@ class QueueService
             // 判断锁是否过期
             $lock_time = $this->handler->get($key);
             // 锁已过期，删除锁，重新获取
-            if(time()>$lock_time){
+            if(time()>$lock_time || $this->handler->ttl($key)){
                 $this->unlock($key);
                 $is_lock = $this->handler->setnx($key, time()+$expire);
             }
@@ -371,8 +371,5 @@ class QueueService
     public function unlock($key){
         return $this->handler->del($key);
     }
-
-
-
-
+    
 }
