@@ -12,7 +12,7 @@ class QueueService
 {
     private $key = '';
     private $prefix = '';
-    private $handler = null;
+    public $handler = null;
     private $expire = 3600;
 
     function __construct($redisKey = '', $expire=0, $redis='default')

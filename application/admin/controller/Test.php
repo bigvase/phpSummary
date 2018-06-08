@@ -17,13 +17,13 @@ class Test extends  BaseController {
 //        $demo->test();
     }
     public function index(){
-	    $a = Config::get('interfaceParam');
-	    dump($a);die;
-	    die;
+//	    $a = Config::get('interfaceParam');
+//	    dump($a);die;
+//	    die;
 //        $file = ROOT_PATH.'data/log.txt';
 //        $file1 = ROOT_PATH.'data/log1.txt';
-        $queue = \think\Loader::model('admin/QueueService','service');
-        $queue->increase('kkk-vvv');
+        $queue = \think\Loader::model('admin/RedisAppService','service');
+        $queue->rank();
 //        $key = 'aaa_bbb11';
 //        $lock = $queue->lock($key);
 //        if($lock){

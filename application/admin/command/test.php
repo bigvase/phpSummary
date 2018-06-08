@@ -22,6 +22,7 @@ class Test extends Command
     {
         $output->writeln("TestCommand:");
     }
+
 }
 
 
