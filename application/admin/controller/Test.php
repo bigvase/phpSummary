@@ -12,18 +12,22 @@ use think\Config;
 class Test extends  BaseController {
 	public function test(){
         $queue = \think\Loader::model('admin/QueueService','service');
-        echo($queue->rGet('kkk-vvv'));
+//        echo($queue->rGet('kkk-vvv'));
 //        $demo = \think\Loader::model('admin/HttpRequestService','service');
 //        $demo->test();
+        $message='新年快乐';
+        $ret = $queue->handler->publish('中央广播电台',$message);
+        dump($ret);
     }
     public function index(){
+        ini_set('default_socket_timeout', -1);
 //	    $a = Config::get('interfaceParam');
 //	    dump($a);die;
 //	    die;
 //        $file = ROOT_PATH.'data/log.txt';
 //        $file1 = ROOT_PATH.'data/log1.txt';
         $queue = \think\Loader::model('admin/RedisAppService','service');
-        $queue->rank();
+        $queue->handler->subscribe(array('中央广播电台'), [$this,'callback']);
 //        $key = 'aaa_bbb11';
 //        $lock = $queue->lock($key);
 //        if($lock){
@@ -40,6 +44,10 @@ class Test extends  BaseController {
 //        }
 //        file_put_contents($file,$ic-1);
 //        $queue->unlock($key);
+    }
+
+    function callback($instance,$channelName,$message){
+        echo 'instance:'.$instance."channelName:".$channelName."message".$message;
     }
 
 
