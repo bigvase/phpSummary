@@ -28,13 +28,23 @@ class HttpRequestService extends BaseService
     public $interConfig;
     function __construct(){
         parent::__construct();
+        $this->interConfig = Config::get('interfaceParam');
+
+        $sign = \think\Loader::model('admin/SignService','service');
+        $ret = $sign->verify($_POST['param'],$_POST['sign'],['base_info']['public_key']);
+        dump($ret);die;
+        $sign->public_decrypt($_POST['param'],$this->interConfig['base_info']['public_key']);
+
+        $signParam = $sign->param_aes_encode(json_encode($data),$this->private_key,$this->aesKey);
+
+
         $this->reqData   = json_decode($_POST['detailData'],true);
         $this->inter     = $_POST['interName'];
         $this->sign      = $_POST['sign'];
         $this->timestamp = $_POST['timestamp'];
         $this->username  = $_POST['platform'];
         $this->requestNo = $this->reqData['requestNo'];
-        $this->interConfig = Config::get('interfaceParam');
+
         $this->requestEntrance();
     }
     /**
@@ -61,11 +71,13 @@ class HttpRequestService extends BaseService
     public function checkInterface(){
         if(empty($this->inter)) exception('接口名称不能为空~~');
         $interface = strtoupper($this->inter);
+
         if(!$this->interConfig['interface_name'] || !in_array($interface,$this->interConfig['interface_name'])){
             exception('不存在约定好的接口名称~~',4003);
         }
-        if($this->timestamp <= (time() + 86400) && $this->timestamp >= (time()-300)){
-            exception('请求失效接口~~',4004);
+
+        if(!($this->timestamp <= (time() + 86400)) || !($this->timestamp >= (time()-1300))){
+            exception('请求接口失效,请重新发起~~',4004);
         }
         return true;
     }
