@@ -59,10 +59,16 @@ class Testserver extends controller
 
     }
 
+    public function gate(){
+        $data = [1,2,3,4];
+        $ret = $this->gateRequest($this->url,'',$data,'');
+        dump($ret);
+    }
+
     private function httpRequest($param){
 
         $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL,$this->url);
+        curl_setopt($ch, CURLOPT_URL,$this->url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -73,6 +79,35 @@ class Testserver extends controller
         return $res;
     }
 
+    private function gateRequest($url, $headers, $data, $key) {
+        //1为调试模式
+        $debug = 0;
+        $temp = $data;
+        $Html = '
+            <!DOCTYPE HTML>
+            <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                <title>跳转中...</title>
+            </head>
+            <body>';
+        $Html .= "<form id='SubmitPost' name='SubmitPost' action='" . $url . "' method='POST'>";
+        foreach ($temp as $key => $val) {
+            if ($debug) {
+                $Html .= "$key:&nbsp;&nbsp;&nbsp;&nbsp;<input type='text'  name='" . $key . "' value='" . $val . "'  /><br>";
+            } else {
+                $Html .= "<input type='hidden'  name='" . $key . "' value='" . $val . "'  /><br>";
+            }
+        }
+        $Html .= "<input type='submit' value='submit' ".($debug ? '' : 'hidden' ).">";
+        $Html .= '
+            </form>
+            <script type="text/javascript">' .
+            ($debug ? 'alert(document.getElementById("j_serviceName").name);
+                document.forms["SubmitPost"].submit();' : 'document.forms["SubmitPost"].submit();')
+            . '</script></body></html>';
+        echo $Html;
+    }
 
 
 
