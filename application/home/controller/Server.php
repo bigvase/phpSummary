@@ -25,43 +25,37 @@ class Server extends controller
      *
      */
     public function server(){
-//        $a = ["requestNo"=>"aaaaaaa","username"=>"eeeee","timestamp"=>"123456"];
-//        echo json_encode($a);die;
         $respData= [];
         $service = \think\loader::model('Admin/HttpRequestService','service');
-        if(!empty($service->errMsg)){
+
+        if(empty($service->errMsg)){
             try{
-                $respData = $this->doRun();
+                $respData = $this->doRun($service->param);
             }catch (Exception $e){
                 exception($e->getMessage());
             }
         }
+
         if ($service->errMsg) {
-            $status                 = 'INIT';
-            $respData['result']     = false;
-            $respData['resultCode'] = '0001';
             $respData['status']     = 'INIT';
-            $respData['errorCode']  = $service->errMsg;
             $respData['errorMsg']   = $service->errMsg;
-            $respData['reqData']    = $_POST['reqData'];
         } else {
-            $status = 'SUCCESS';
+            $respData['status'] = 'SUCCESS';
         }
-        if (empty($respData) || is_array($respData)) {
-            $respData = json_encode($respData);
-        }
+
+        $respData['reqData']   = json_encode($respData);
+        $respData['interName'] = $service->inter;
+        $respData['timestamp'] = time();
+        $respData['platform']  = $service->username;
+
         //加签
 
-        $sign    = 'xxxxxxxx';//service('Admin/EscrowHttp')->ecsSign($respData, $service->private_key);
-        $retData = [
-            'status'      => $status,
-            'serviceName' => $service->inter,
-            'platform'    => $service->username,
-            'respData'    => $respData,
-            'sign'        => $sign,
-        ];
+        $signServer    = \think\loader::model('Admin/SignService','service');
+        $retData['param'] = $signServer->param_aes_encode(json_encode($respData),$service->interConfig['base_info']['aesKey'],$service->interConfig['base_info']['aesIV']);
+        $retData['sign'] = $signServer->ecsSign($retData['param'],$service->interConfig['base_info']['private_key']);
+//        dump($retData);die;
         echo json_encode($retData);
-        $respDataJson = json_encode($retData);
+        $respDataJson = json_encode($respData);
         $saveData     = ['return' => $respDataJson, 'returnTime' => time(), 'returnNum' => '1'];
         //返回参数保存
         try {
@@ -71,17 +65,18 @@ class Server extends controller
         }
     }
 
-    private function doRun(){
-        $interName = input('interName');
-        $username  = input('platform');
-        $reqData   = json_decode(input('detailData'),true);
+    private function doRun($param){
+        $interName = $param['interName'];
+        $reqData   = $param['detailData'];
         $interConfig = Config::get('interfaceParam');
-
+//        echo $interName;die;
         if (!in_array($interName, $interConfig['interface_name'])) exception("{$interName}方法不存在");
+
+//        $a = \think\loader::model('Admin/SignService','service');
+
         //尝试调用
         try {
             $ret             = call_user_func_array([$this, underlined_hump(strtolower($interName) . '_Callback')], [$reqData]);
-            $ret['platform'] = $username;
             return $ret;
         } catch (Exception $e) {
             exception($e->getMessage());

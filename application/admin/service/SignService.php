@@ -11,8 +11,8 @@ use think\Exception;
  */
 class SignService
 {
-    private $privateKey;//私钥
-    private $publicKey;//公钥
+    private $privateKey = '';//私钥
+    private $publicKey = '';//公钥
     private $public_key_file;//地址
     private $private_key_file;
     private $is_file = 0;
@@ -21,12 +21,18 @@ class SignService
 
     public function __construct()
     {
-        //读配置文件
-//        $this->privateKey = privateKey;
-//        $this->publicKey  = $publicKey;
-//        if(empty($this->privateKey) || empty($this->publicKey)){
-//            exception('key not null ~~');
+//        $base_info = Config::get('interfaceParam.base_info');
+//
+//        //读配置文件
+//        if(!empty($base_info['private_key'])){
+//            $this->privateKey = $base_info['private_key'];
 //        }
+//        if($base_info['public_key']){
+//            $this->publicKey  = $base_info['public_key'];
+//        }
+////        if(empty($this->privateKey) || empty($this->publicKey)){
+////            exception('key not null ~~');
+////        }
 //        try{
 //            if($this->is_file){
 //                if(!file_exists($this->public_key_file) || !file_exists($this->private_key_file)) {
@@ -39,9 +45,9 @@ class SignService
 //                    exception('public key or private key no usable');
 //                }
 //            }
-//            if(false == ($this->public_key_resource = $this->is_bad_public_key($this->publicKey)) || false == ($this->private_key_resource = $this->is_bad_private_key($this->privateKey))) {
-//                exception("public key or private key no usable");
-//            }
+////            if(false == ($this->public_key_resource = $this->is_bad_public_key($this->publicKey)) || false == ($this->private_key_resource = $this->is_bad_private_key($this->privateKey))) {
+////                exception("public key or private key no usable");
+////            }
 //
 //        }catch(Exception $e){
 //            exception('system error!');
@@ -85,9 +91,12 @@ class SignService
     public function private_encrypt($input,$privateKey = '') {
         $privateKey = $privateKey == '' ?  $this->private_key_resource : $privateKey;
         $key  = $this->is_bad_private_key($privateKey) ? $privateKey : $this->format_secret_key($privateKey,'pri');
+
         if(!$this->is_bad_private_key($key)) exception('私密钥无效！');
 
-        openssl_private_encrypt($input,$output,$key);
+        $ret = openssl_private_encrypt($input,$output,$key);
+
+        if(!$ret) exception('加密失败~！');
         return base64_encode($output);
     }
     /**
@@ -97,10 +106,11 @@ class SignService
         $publicKey = $publicKey == '' ?  $this->public_key_resource : $publicKey;
 
         $key  = $this->is_bad_public_key($publicKey) ? $publicKey : $this->format_secret_key($publicKey,'pub');
+        if(!$this->is_bad_public_key($key)) exception('公钥无效！');
 
-        if($this->is_bad_public_key($key)) exception('公钥无效！');
+        $ret = openssl_public_decrypt(base64_decode($input),$output,$key);
+        if(!$ret) exception('加密失败~！');
 
-        openssl_public_decrypt(base64_decode($input),$output,$key);
         return $output;
     }
     /**
@@ -108,9 +118,9 @@ class SignService
      */
     public function public_encrypt($input,$publicKey = '') {
         $publicKey = $publicKey == '' ?  $this->public_key_resource : $publicKey;
-        $key  = $this->is_bad_public_key($publicKey) ? $publicKey : $this->format_secret_key($publicKey,'pub');
-        if($this->is_bad_public_key($key)) exception('公钥无效！');
 
+        $key  = $this->is_bad_public_key($publicKey) ? $publicKey : $this->format_secret_key($publicKey,'pub');
+        if(!$this->is_bad_public_key($key)) exception('公钥无效！');
         openssl_public_encrypt($input,$output,$key);
         return base64_encode($output);
     }
@@ -175,6 +185,28 @@ class SignService
         return $verify;
     }
 
+    /**
+     *  RSA加签
+     * @param $data reqData字符串
+     * @param $priKey
+     * @return string
+     */
+    public function ecsSign($data, $priKey) {
+        $priKey = $this->format_secret_key($priKey ? $priKey : $this -> privatekey, 'pri');
+        $passphrase = '';
+        $algo = OPENSSL_ALGO_SHA1;
+        // 加载私钥
+        $privatekey = openssl_pkey_get_private($priKey, $passphrase);
+
+        // 生成摘要
+        //$digest = openssl_digest("", $digestAlgo);
+        // 签名
+        $signature = '';
+        openssl_sign($data, $signature, $privatekey, $algo);
+        $signature = base64_encode($signature);
+        return $signature;
+    }
+
 
     /***
      * 参数AES加密
@@ -182,14 +214,13 @@ class SignService
      * @param $param
      * @return string
      */
-    public function param_aes_encode($param, $privateKey, $iv) {
+    public function param_aes_encode($param, $Key, $iv) {
 
         if (empty($param)) return $param;
 
-        $privateKey = $privateKey ? $privateKey : Config::get('AES_KEY');
-        $privateKey = $this->format_secret_key($privateKey,'pri');
+        $Key = $Key ? $Key : Config::get('AES_KEY');
         $iv = $iv ? $iv : Config::get('AES_VI');
-        return strtoupper(bin2hex(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $privateKey, $param, MCRYPT_MODE_CBC, $iv))));
+        return strtoupper(bin2hex(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $Key, $param, MCRYPT_MODE_CBC, $iv))));
     }
 
     /***
@@ -198,13 +229,22 @@ class SignService
      * @param $param
      * @return string
      */
-    public function param_aes_decode($param, $privateKey, $iv) {
+    public function param_aes_decode($param, $Key, $iv) {
 
         if (empty($param)) return $param;
 
-        $privateKey = $privateKey ? $privateKey : Config::get('AES_KEY');
+        $Key = $Key ? $Key : Config::get('AES_KEY');
         $iv = $iv ? $iv : Config::get('AES_VI');
 
-        return trim(''.(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $privateKey, base64_decode(pack('H*', $param)), MCRYPT_MODE_CBC, $iv)));
+        return trim(''.(mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $Key, base64_decode(pack('H*', $param)), MCRYPT_MODE_CBC, $iv)));
     }
+
+    /**
+     * 测试
+     */
+    public function testCallback(){
+        return ['1111'=>'222'];
+    }
+
+
 }

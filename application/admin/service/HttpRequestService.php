@@ -18,6 +18,7 @@ class HttpRequestService extends BaseService
 {
     protected $_url = '';//请求的url
     protected $_check = true;//验签
+    public $param = [];
     public $reqData = [];
     public $inter;
     public $sign;
@@ -31,18 +32,17 @@ class HttpRequestService extends BaseService
         $this->interConfig = Config::get('interfaceParam');
 
         $sign = \think\Loader::model('admin/SignService','service');
-        $ret = $sign->verify($_POST['param'],$_POST['sign'],['base_info']['public_key']);
-        dump($ret);die;
-        $sign->public_decrypt($_POST['param'],$this->interConfig['base_info']['public_key']);
-
-        $signParam = $sign->param_aes_encode(json_encode($data),$this->private_key,$this->aesKey);
+        $ret = $sign->verify($_POST['param'],$_POST['sign'],$this->interConfig['base_info']['public_key']);
+        if(!$ret) exception('验签失败~');
 
 
-        $this->reqData   = json_decode($_POST['detailData'],true);
-        $this->inter     = $_POST['interName'];
-        $this->sign      = $_POST['sign'];
-        $this->timestamp = $_POST['timestamp'];
-        $this->username  = $_POST['platform'];
+        $signParam = $sign->param_aes_decode($_POST['param'],$this->interConfig['base_info']['aesKey'],$this->interConfig['base_info']['aesIV']);
+        $this->param = json_decode($signParam,1);
+//        echo $this->param['interName'];die;
+        $this->reqData   = $this->param['detailData'];
+        $this->inter     = $this->param['interName'];
+        $this->timestamp = $this->param['timestamp'];
+        $this->username  = $this->param['platform'];
         $this->requestNo = $this->reqData['requestNo'];
 
         $this->requestEntrance();

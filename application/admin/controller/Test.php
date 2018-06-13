@@ -11,8 +11,9 @@ use think\Config;
 
 class Test extends  BaseController {
 	public function test(){
-	    dump(config::get());die;
+//	    dump($this);die;
         $queue = \think\Loader::model('admin/QueueService','service');
+        dump($queue);die;
 //        echo($queue->rGet('kkk-vvv'));
 //        $demo = \think\Loader::model('admin/HttpRequestService','service');
 //        $demo->test();
