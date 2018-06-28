@@ -38,6 +38,7 @@ class Index extends CommonController
         if($_POST){
             dump($_POST);
         }
+        echo 111;
         return $this->fetch();
     }
 
