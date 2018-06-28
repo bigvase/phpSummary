@@ -22,14 +22,14 @@ class Test extends  BaseController {
         dump($ret);
     }
     public function index(){
-        ini_set('default_socket_timeout', -1);
+//        ini_set('default_socket_timeout', -1);
 //	    $a = Config::get('interfaceParam');
 //	    dump($a);die;
 //	    die;
 //        $file = ROOT_PATH.'data/log.txt';
 //        $file1 = ROOT_PATH.'data/log1.txt';
-        $queue = \think\Loader::model('admin/RedisAppService','service');
-        $queue->handler->subscribe(array('中央广播电台'), [$this,'callback']);
+        $queue = \think\Loader::model('admin/SmsSendService','service');
+        $queue->sendSMS('test',$content=[1000,'2018-6-20'],'test',$type = 1);
 //        $key = 'aaa_bbb11';
 //        $lock = $queue->lock($key);
 //        if($lock){
